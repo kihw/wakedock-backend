@@ -1,0 +1,45 @@
+# Development requirements
+-r requirements.txt
+
+# Development tools & code quality
+black==23.11.0
+isort==5.12.0
+flake8==6.1.0
+mypy==1.7.1
+ruff==0.1.6
+
+# Testing framework & extensions
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+pytest-xdist==3.3.1
+pytest-html==4.1.1
+factory-boy==3.3.0
+
+# Development server & debugging
+watchfiles==0.21.0
+ipython==8.17.2
+ipdb==0.13.13
+rich==13.7.0
+
+# Documentation
+mkdocs==1.5.3
+mkdocs-material==9.4.8
+mkdocs-swagger-ui-tag==0.6.8
+
+# Code quality & security
+pre-commit==3.5.0
+bandit==1.7.5
+safety==2.3.4
+
+# Type stubs
+types-pyyaml==6.0.12.12
+types-requests==2.31.0.10
+types-redis==4.6.0.11
+types-aiofiles==23.2.0.0
+
+# Additional development utilities
+tox==4.11.4
+coverage==7.3.2
+wheel==0.42.0
