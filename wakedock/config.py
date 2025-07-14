@@ -32,6 +32,7 @@ class CaddySettings(BaseSettings):
     api_endpoint: str = "http://caddy:2019"
     config_path: str = "/etc/caddy/Caddyfile"
     admin_api_key: str = ""
+    reload_endpoint: str = "/load"
 
 
 class DatabaseSettings(BaseSettings):
