@@ -49,7 +49,7 @@ def create_admin_user():
         SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
         
         # Import after database is ready
-        from wakedock.database.models import User
+        from wakedock.database.models import User, UserRole
         from wakedock.api.auth.password import hash_password
         
         db = SessionLocal()
@@ -73,7 +73,7 @@ def create_admin_user():
                 email='admin@wakedock.local',
                 hashed_password=hashed_password,
                 full_name='System Administrator',
-                role='admin',
+                role=UserRole.ADMIN,
                 is_active=True,
                 is_verified=True
             )
