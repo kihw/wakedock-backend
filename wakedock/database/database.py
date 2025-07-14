@@ -35,7 +35,7 @@ class DatabaseManager:
             return db_url
         
         # Default to SQLite for development
-        db_path = os.path.join(self.settings.data_dir, "wakedock.db")
+        db_path = os.path.join(self.settings.data_path, "wakedock.db")
         return f"sqlite:///{db_path}"
     
     def initialize(self) -> None:
@@ -47,7 +47,7 @@ class DatabaseManager:
                 self.engine = create_engine(
                     self.database_url,
                     connect_args={"check_same_thread": False},
-                    echo=self.settings.debug
+                    echo=self.settings.wakedock.debug
                 )
             else:
                 # PostgreSQL/MySQL settings
@@ -55,7 +55,7 @@ class DatabaseManager:
                     self.database_url,
                     pool_pre_ping=True,
                     pool_recycle=300,
-                    echo=self.settings.debug
+                    echo=self.settings.wakedock.debug
                 )
             
             # Create session factory

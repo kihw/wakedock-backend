@@ -10,8 +10,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-# Add src to path to import our models
-sys.path.insert(0, str(Path(__file__).parents[3]))
+# Add the parent directory to path to import our models
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from wakedock.database.models import Base
 from wakedock.database.database import DatabaseManager
