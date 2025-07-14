@@ -5,8 +5,8 @@ Configuration management for WakeDock
 import os
 from pathlib import Path
 from typing import List, Optional
-from pydantic import BaseSettings, Field
-from pydantic_settings import BaseSettings as PydanticBaseSettings
+from pydantic import Field
+from pydantic_settings import BaseSettings
 import yaml
 
 
@@ -82,7 +82,7 @@ class ServiceSettings(BaseSettings):
     startup_script: Optional[str] = None
 
 
-class Settings(PydanticBaseSettings):
+class Settings(BaseSettings):
     wakedock: WakeDockSettings = WakeDockSettings()
     caddy: CaddySettings = CaddySettings()
     database: DatabaseSettings = DatabaseSettings()
