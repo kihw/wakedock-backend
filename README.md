@@ -1,5 +1,5 @@
 # 🚀 WakeDock Backend
-
+ 
 > **FastAPI Docker Management API** - Backend service for WakeDock platform with PostgreSQL, Redis, and async operations.
 
 ## 📋 Overview

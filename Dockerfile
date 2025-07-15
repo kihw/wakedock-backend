@@ -3,7 +3,7 @@ FROM python:3.11-slim as builder
 
 WORKDIR /app
 
-# Install build dependencies
+# Inst all build dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
