@@ -64,8 +64,16 @@ def create_admin_user():
             
             print("🔧 No users found, creating default admin user...")
             
-            # Generate secure random password
-            admin_password = generate_secure_password(20)
+            # Get admin password from environment variable or use default
+            admin_password = os.getenv('ADMIN_PASSWORD', 'admin123')
+            
+            # If no password provided, generate a secure random one
+            if not admin_password or admin_password == '':
+                admin_password = generate_secure_password(20)
+                print("🔐 No admin password configured, generating secure random password...")
+            else:
+                print(f"🔐 Using configured admin password")
+            
             hashed_password = hash_password(admin_password)
             
             admin_user = User(
