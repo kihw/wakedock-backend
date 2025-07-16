@@ -1,9 +1,12 @@
 """
-API routes optimisées pour clients mobiles - Version 0.2.6
+API routes optimisées pour clients mobiles - Version 0.5.2
+Responsive design et Progressive Web App optimizations
 """
 import json
 import logging
-from typing import Optional, Dict, Any
+import gzip
+from typing import Optional, Dict, Any, List
+from datetime import datetime, timedelta
 from fastapi import APIRouter, Request, Response, HTTPException, Depends, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -13,6 +16,14 @@ from wakedock.core.mobile_optimization_service import (
     ClientType, 
     CompressionType
 )
+from wakedock.core.dependencies import (
+    get_docker_manager,
+    get_metrics_collector,
+    get_auth_service_dependency
+)
+from wakedock.core.docker_manager import DockerManager
+from wakedock.core.metrics_collector import MetricsCollector
+from wakedock.core.auth_service import AuthService
 
 logger = logging.getLogger(__name__)
 
@@ -435,3 +446,232 @@ async def simulate_client_type(
     except Exception as e:
         logger.error(f"Erreur lors de la simulation: {e}")
         raise HTTPException(status_code=500, detail="Erreur lors de la simulation")
+
+# ============================================================================
+# Endpoints responsive optimisés pour version 0.5.2
+# ============================================================================
+
+def compress_response(data: Any, request: Request) -> Response:
+    """Compresse les réponses pour économiser la bande passante mobile"""
+    
+    # Vérifier si le client supporte gzip
+    accept_encoding = request.headers.get("accept-encoding", "")
+    
+    json_str = json.dumps(data, ensure_ascii=False, separators=(',', ':'))
+    
+    if "gzip" in accept_encoding and len(json_str) > 1024:  # Compresser si > 1KB
+        compressed_data = gzip.compress(json_str.encode('utf-8'))
+        
+        return Response(
+            content=compressed_data,
+            media_type="application/json",
+            headers={
+                "Content-Encoding": "gzip",
+                "Cache-Control": "public, max-age=300",  # Cache 5 minutes
+                "X-Compressed-Size": str(len(compressed_data)),
+                "X-Original-Size": str(len(json_str))
+            }
+        )
+    
+    return JSONResponse(
+        content=data,
+        headers={
+            "Cache-Control": "public, max-age=300",
+            "X-Original-Size": str(len(json_str))
+        }
+    )
+
+@router.get("/dashboard/summary")
+async def get_dashboard_summary(
+    request: Request,
+    docker_manager: DockerManager = Depends(get_docker_manager),
+    metrics_collector: MetricsCollector = Depends(get_metrics_collector),
+    auth_service: AuthService = Depends(get_auth_service_dependency)
+):
+    """
+    Résumé ultra-léger du dashboard pour mobile
+    Données essentielles seulement pour responsive design
+    """
+    
+    try:
+        # Données essentielles seulement
+        containers = await docker_manager.list_containers()
+        
+        # Compteurs rapides
+        containers_summary = {
+            "total": len(containers),
+            "running": len([c for c in containers if c.get("State") == "running"]),
+            "stopped": len([c for c in containers if c.get("State") == "exited"]),
+            "paused": len([c for c in containers if c.get("State") == "paused"])
+        }
+        
+        # Métriques système simplifiées
+        system_metrics = await metrics_collector.get_system_metrics()
+        system_summary = {
+            "cpu_percent": round(system_metrics.get("cpu_percent", 0), 1),
+            "memory_percent": round(system_metrics.get("memory_percent", 0), 1),
+            "disk_percent": round(system_metrics.get("disk_percent", 0), 1),
+            "status": "healthy" if system_metrics.get("cpu_percent", 0) < 80 else "warning"
+        }
+        
+        # Dernières alertes critiques uniquement
+        alerts = await metrics_collector.get_recent_alerts(limit=3, severity="critical")
+        alerts_summary = [
+            {
+                "id": alert.get("id"),
+                "message": alert.get("message", "")[:50] + "..." if len(alert.get("message", "")) > 50 else alert.get("message", ""),
+                "severity": alert.get("severity"),
+                "timestamp": alert.get("timestamp")
+            }
+            for alert in alerts
+        ]
+        
+        data = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "containers": containers_summary,
+            "system": system_summary,
+            "alerts": alerts_summary,
+            "cache_duration": 300  # 5 minutes
+        }
+        
+        return compress_response(data, request)
+        
+    except Exception as e:
+        logger.error(f"Erreur dashboard summary: {e}")
+        return JSONResponse(
+            content={
+                "error": "Erreur lors du chargement du dashboard",
+                "message": str(e),
+                "timestamp": datetime.utcnow().isoformat()
+            },
+            status_code=500
+        )
+
+@router.get("/containers/light")
+async def get_containers_light(
+    request: Request,
+    page: int = Query(1, ge=1, description="Numéro de page"),
+    limit: int = Query(10, ge=1, le=50, description="Nombre d'éléments par page"),
+    status: Optional[str] = Query(None, description="Filtrer par statut"),
+    docker_manager: DockerManager = Depends(get_docker_manager)
+):
+    """
+    Liste légère des containers avec pagination responsive
+    Optimisée pour mobile avec données minimales
+    """
+    
+    try:
+        # Récupérer tous les containers
+        all_containers = await docker_manager.list_containers()
+        
+        # Filtrer par statut si spécifié
+        if status:
+            all_containers = [c for c in all_containers if c.get("State") == status]
+        
+        # Pagination
+        total = len(all_containers)
+        offset = (page - 1) * limit
+        containers_page = all_containers[offset:offset + limit]
+        
+        # Données minimales pour mobile
+        containers_light = []
+        for container in containers_page:
+            container_light = {
+                "id": container.get("Id", "")[:12],  # ID court
+                "name": container.get("Names", [""])[0].lstrip("/"),
+                "image": container.get("Image", "").split(":")[-1] if ":" in container.get("Image", "") else container.get("Image", ""),
+                "status": container.get("State", "unknown"),
+                "created": container.get("Created", 0),
+                "ports": [
+                    {
+                        "public": port.get("PublicPort"),
+                        "private": port.get("PrivatePort"),
+                        "type": port.get("Type")
+                    }
+                    for port in container.get("Ports", [])
+                    if port.get("PublicPort")  # Seulement les ports exposés
+                ][:3]  # Maximum 3 ports affichés
+            }
+            containers_light.append(container_light)
+        
+        data = {
+            "containers": containers_light,
+            "pagination": {
+                "page": page,
+                "limit": limit,
+                "total": total,
+                "pages": (total + limit - 1) // limit,
+                "has_next": offset + limit < total,
+                "has_prev": page > 1
+            },
+            "summary": {
+                "total": total,
+                "filtered": len(containers_page) if status else total
+            },
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        return compress_response(data, request)
+        
+    except Exception as e:
+        logger.error(f"Erreur containers light: {e}")
+        return JSONResponse(
+            content={
+                "error": "Erreur lors du chargement des containers",
+                "message": str(e),
+                "containers": [],
+                "pagination": {"page": page, "limit": limit, "total": 0, "pages": 0}
+            },
+            status_code=500
+        )
+
+@router.get("/health/mobile")
+async def get_mobile_health(
+    request: Request,
+    docker_manager: DockerManager = Depends(get_docker_manager),
+    metrics_collector: MetricsCollector = Depends(get_metrics_collector)
+):
+    """
+    Health check ultra-rapide pour PWA
+    Réponse optimisée pour responsive design
+    """
+    
+    try:
+        # Test rapide de Docker
+        docker_status = "healthy"
+        try:
+            await docker_manager.ping()
+        except:
+            docker_status = "unhealthy"
+        
+        # Métriques système rapides
+        system_metrics = await metrics_collector.get_system_metrics()
+        
+        # Statut global simplifié
+        overall_status = "healthy"
+        if docker_status != "healthy":
+            overall_status = "critical"
+        elif system_metrics.get("cpu_percent", 0) > 90 or system_metrics.get("memory_percent", 0) > 95:
+            overall_status = "warning"
+        
+        data = {
+            "status": overall_status,
+            "docker": docker_status,
+            "cpu": round(system_metrics.get("cpu_percent", 0), 0),
+            "memory": round(system_metrics.get("memory_percent", 0), 0),
+            "timestamp": datetime.utcnow().isoformat(),
+            "response_time_ms": 0  # Sera calculé côté client
+        }
+        
+        return compress_response(data, request)
+        
+    except Exception as e:
+        logger.error(f"Erreur mobile health: {e}")
+        return JSONResponse(
+            content={
+                "status": "critical",
+                "error": str(e),
+                "timestamp": datetime.utcnow().isoformat()
+            },
+            status_code=500
+        )
