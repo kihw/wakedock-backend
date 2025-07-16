@@ -11,6 +11,9 @@ from wakedock.config import get_settings
 from wakedock.api.app import create_app
 from wakedock.core.monitoring import MonitoringService
 from wakedock.core.orchestrator import DockerOrchestrator
+from wakedock.core.advanced_analytics import AdvancedAnalyticsService
+from wakedock.core.alerts_service import AlertsService
+from wakedock.core.metrics_collector import MetricsCollector
 from wakedock.database.database import init_database
 
 # Create app instance for uvicorn
@@ -47,11 +50,37 @@ def create_application():
     orchestrator = DockerOrchestrator()
     monitoring_service = MonitoringService()
     
+    # Initialize analytics if monitoring is enabled
+    analytics_service = None
+    alerts_service = None
+    if settings.monitoring.enabled:
+        try:
+            # Create metrics collector
+            metrics_collector = MetricsCollector()
+            
+            # Create analytics service
+            analytics_service = AdvancedAnalyticsService(
+                metrics_collector=metrics_collector,
+                storage_path=str(Path(settings.wakedock.data_path) / "analytics")
+            )
+            
+            # Create alerts service
+            alerts_service = AlertsService(
+                metrics_collector=metrics_collector,
+                storage_path=str(Path(settings.wakedock.data_path) / "alerts")
+            )
+            
+            logger.info("Advanced Analytics and Alerts services initialized")
+        except Exception as e:
+            logger.warning(f"Failed to initialize Analytics/Alerts services: {e}")
+            analytics_service = None
+            alerts_service = None
+    
     # Connect monitoring service to orchestrator
     monitoring_service.set_orchestrator(orchestrator)
     
     # Create FastAPI app
-    app = create_app(orchestrator, monitoring_service)
+    app = create_app(orchestrator, monitoring_service, analytics_service, alerts_service)
     
     return app
 

@@ -9,17 +9,21 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import logging
 
-from wakedock.api.routes import services, health, proxy, system, containers, container_lifecycle, images, container_logs, compose_stacks, env_files, logs
+from wakedock.api.routes import services, health, proxy, system, containers, container_lifecycle, images, container_logs, compose_stacks, env_files, logs, centralized_logs, monitoring, analytics
+from wakedock.api.routes import alerts
 from wakedock.api.auth.routes import router as auth_router
 from wakedock.api.middleware import ProxyMiddleware
 from wakedock.core.orchestrator import DockerOrchestrator
 from wakedock.core.monitoring import MonitoringService
+from wakedock.core.advanced_analytics import AdvancedAnalyticsService
+from wakedock.core.alerts_service import AlertsService
+from wakedock.core.metrics_collector import MetricsCollector
 from wakedock.config import get_settings
 
 logger = logging.getLogger(__name__)
 
 
-def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService) -> FastAPI:
+def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService, analytics: AdvancedAnalyticsService = None, alerts: AlertsService = None) -> FastAPI:
     """Create and configure FastAPI application"""
     settings = get_settings()
     
@@ -114,6 +118,32 @@ def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService) 
         tags=["logs"]
     )
     
+    # Centralized logs routes
+    app.include_router(
+        centralized_logs.router,
+        tags=["centralized-logs"]
+    )
+    
+    # Real-time monitoring routes
+    app.include_router(
+        monitoring.router,
+        tags=["monitoring"]
+    )
+    
+    # Advanced analytics routes
+    if analytics:
+        app.include_router(
+            analytics.router,
+            tags=["analytics"]
+        )
+    
+    # Alerts routes
+    if alerts:
+        app.include_router(
+            alerts.router,
+            tags=["alerts"]
+        )
+    
     app.include_router(
         proxy.router,
         prefix="",
@@ -123,14 +153,48 @@ def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService) 
     # Store dependencies in app state
     app.state.orchestrator = orchestrator
     app.state.monitoring = monitoring
+    app.state.analytics = analytics
+    app.state.alerts = alerts
     app.state.settings = settings
     
     @app.on_event("startup")
     async def startup_event():
         logger.info("WakeDock API started")
         
+        # Initialize analytics service if provided
+        if analytics:
+            try:
+                await analytics.start()
+                logger.info("Advanced Analytics service started")
+            except Exception as e:
+                logger.error(f"Failed to start Analytics service: {e}")
+        
+        # Initialize alerts service if provided
+        if alerts:
+            try:
+                await alerts.start()
+                logger.info("Alerts service started")
+            except Exception as e:
+                logger.error(f"Failed to start Alerts service: {e}")
+        
     @app.on_event("shutdown")
     async def shutdown_event():
         logger.info("WakeDock API shutting down")
+        
+        # Stop analytics service if running
+        if analytics:
+            try:
+                await analytics.stop()
+                logger.info("Advanced Analytics service stopped")
+            except Exception as e:
+                logger.error(f"Error stopping Analytics service: {e}")
+        
+        # Stop alerts service if running
+        if alerts:
+            try:
+                await alerts.stop()
+                logger.info("Alerts service stopped")
+            except Exception as e:
+                logger.error(f"Error stopping Alerts service: {e}")
     
     return app
