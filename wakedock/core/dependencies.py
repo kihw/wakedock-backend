@@ -6,12 +6,14 @@ from wakedock.core.docker_client import DockerClient
 from wakedock.core.metrics_collector import MetricsCollector
 from wakedock.core.alerts_service import AlertsService
 from wakedock.core.log_optimization_service import LogOptimizationService
+from wakedock.core.auth_service import get_auth_service, AuthService
 
 # Instances globales
 _docker_client: DockerClient = None
 _metrics_collector: MetricsCollector = None
 _alerts_service: AlertsService = None
 _log_optimization_service: LogOptimizationService = None
+_auth_service: AuthService = None
 
 def get_docker_client() -> DockerClient:
     """
@@ -64,6 +66,17 @@ def get_log_optimization_service() -> LogOptimizationService:
     
     return _log_optimization_service
 
+def get_auth_service_dependency() -> AuthService:
+    """
+    Dépendance FastAPI pour obtenir le service d'authentification
+    """
+    global _auth_service
+    
+    if _auth_service is None:
+        _auth_service = get_auth_service()
+    
+    return _auth_service
+
 async def startup_services():
     """
     Démarre tous les services au startup de l'application
@@ -79,12 +92,24 @@ async def startup_services():
     # Démarre le service d'optimisation des logs
     log_optimization_service = get_log_optimization_service()
     await log_optimization_service.start()
+    
+    # Initialise le service d'authentification
+    auth_service = get_auth_service_dependency()
+    # Le service d'auth n'a pas besoin de start() car il est stateless
+    
+    # Nettoie les sessions expirées au démarrage
+    auth_service.cleanup_expired_sessions()
 
 async def shutdown_services():
     """
     Arrête tous les services au shutdown de l'application
     """
-    global _alerts_service, _metrics_collector, _docker_client, _log_optimization_service
+    global _alerts_service, _metrics_collector, _docker_client, _log_optimization_service, _auth_service
+    
+    # Nettoie les sessions d'authentification
+    if _auth_service:
+        _auth_service.cleanup_expired_sessions()
+        _auth_service = None
     
     # Arrête le service d'optimisation des logs
     if _log_optimization_service:
