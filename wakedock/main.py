@@ -14,6 +14,7 @@ from wakedock.core.orchestrator import DockerOrchestrator
 from wakedock.core.advanced_analytics import AdvancedAnalyticsService
 from wakedock.core.alerts_service import AlertsService
 from wakedock.core.metrics_collector import MetricsCollector
+from wakedock.core.log_optimization_service import LogOptimizationService
 from wakedock.database.database import init_database
 
 # Create app instance for uvicorn
@@ -53,6 +54,7 @@ def create_application():
     # Initialize analytics if monitoring is enabled
     analytics_service = None
     alerts_service = None
+    log_optimization_service = None
     if settings.monitoring.enabled:
         try:
             # Create metrics collector
@@ -70,11 +72,17 @@ def create_application():
                 storage_path=str(Path(settings.wakedock.data_path) / "alerts")
             )
             
-            logger.info("Advanced Analytics and Alerts services initialized")
+            # Create log optimization service
+            log_optimization_service = LogOptimizationService(
+                storage_path=str(Path(settings.wakedock.data_path) / "logs_optimization")
+            )
+            
+            logger.info("Advanced Analytics, Alerts, and Log Optimization services initialized")
         except Exception as e:
-            logger.warning(f"Failed to initialize Analytics/Alerts services: {e}")
+            logger.warning(f"Failed to initialize Analytics/Alerts/LogOptimization services: {e}")
             analytics_service = None
             alerts_service = None
+            log_optimization_service = None
     
     # Connect monitoring service to orchestrator
     monitoring_service.set_orchestrator(orchestrator)

@@ -5,11 +5,13 @@ from functools import lru_cache
 from wakedock.core.docker_client import DockerClient
 from wakedock.core.metrics_collector import MetricsCollector
 from wakedock.core.alerts_service import AlertsService
+from wakedock.core.log_optimization_service import LogOptimizationService
 
 # Instances globales
 _docker_client: DockerClient = None
 _metrics_collector: MetricsCollector = None
 _alerts_service: AlertsService = None
+_log_optimization_service: LogOptimizationService = None
 
 def get_docker_client() -> DockerClient:
     """
@@ -49,6 +51,19 @@ def get_alerts_service() -> AlertsService:
     
     return _alerts_service
 
+def get_log_optimization_service() -> LogOptimizationService:
+    """
+    Dépendance FastAPI pour obtenir le service d'optimisation des logs
+    """
+    global _log_optimization_service
+    
+    if _log_optimization_service is None:
+        _log_optimization_service = LogOptimizationService(
+            storage_path="/var/log/wakedock/logs_optimization"
+        )
+    
+    return _log_optimization_service
+
 async def startup_services():
     """
     Démarre tous les services au startup de l'application
@@ -60,12 +75,21 @@ async def startup_services():
     # Démarre le service d'alertes
     alerts_service = get_alerts_service()
     await alerts_service.start()
+    
+    # Démarre le service d'optimisation des logs
+    log_optimization_service = get_log_optimization_service()
+    await log_optimization_service.start()
 
 async def shutdown_services():
     """
     Arrête tous les services au shutdown de l'application
     """
-    global _alerts_service, _metrics_collector, _docker_client
+    global _alerts_service, _metrics_collector, _docker_client, _log_optimization_service
+    
+    # Arrête le service d'optimisation des logs
+    if _log_optimization_service:
+        await _log_optimization_service.stop()
+        _log_optimization_service = None
     
     # Arrête le service d'alertes
     if _alerts_service:
