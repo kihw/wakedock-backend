@@ -2,29 +2,46 @@
 Dépendances FastAPI pour l'application WakeDock
 """
 from functools import lru_cache
-from wakedock.core.docker_client import DockerClient
+from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import Depends
+from wakedock.core.docker_manager import DockerManager
 from wakedock.core.metrics_collector import MetricsCollector
 from wakedock.core.alerts_service import AlertsService
 from wakedock.core.log_optimization_service import LogOptimizationService
 from wakedock.core.auth_service import get_auth_service, AuthService
+from wakedock.core.user_profile_service import get_user_profile_service, UserProfileService
+from wakedock.core.rbac_service import get_rbac_service, RBACService
+from wakedock.core.security_audit_service import get_security_audit_service, SecurityAuditService
+from wakedock.core.cicd_service import get_cicd_service, CICDService
+from wakedock.core.auto_deployment_service import AutoDeploymentService
+from wakedock.core.swarm_service import SwarmService
+from wakedock.core.environment_service import EnvironmentService
+from wakedock.database.database import get_async_session
 
 # Instances globales
-_docker_client: DockerClient = None
+_docker_manager: DockerManager = None
 _metrics_collector: MetricsCollector = None
 _alerts_service: AlertsService = None
 _log_optimization_service: LogOptimizationService = None
 _auth_service: AuthService = None
+_user_profile_service: UserProfileService = None
+_rbac_service: RBACService = None
+_security_audit_service: SecurityAuditService = None
+_cicd_service: CICDService = None
+_auto_deployment_service: AutoDeploymentService = None
+_swarm_service: SwarmService = None
+_environment_service: EnvironmentService = None
 
-def get_docker_client() -> DockerClient:
+def get_docker_manager() -> DockerManager:
     """
-    Dépendance FastAPI pour obtenir le client Docker
+    Dépendance FastAPI pour obtenir le manager Docker
     """
-    global _docker_client
+    global _docker_manager
     
-    if _docker_client is None:
-        _docker_client = DockerClient()
+    if _docker_manager is None:
+        _docker_manager = DockerManager()
     
-    return _docker_client
+    return _docker_manager
 
 def get_metrics_collector() -> MetricsCollector:
     """
@@ -33,8 +50,8 @@ def get_metrics_collector() -> MetricsCollector:
     global _metrics_collector
     
     if _metrics_collector is None:
-        docker_client = get_docker_client()
-        _metrics_collector = MetricsCollector(docker_client)
+        docker_manager = get_docker_manager()
+        _metrics_collector = MetricsCollector(docker_manager)
     
     return _metrics_collector
 
@@ -77,6 +94,97 @@ def get_auth_service_dependency() -> AuthService:
     
     return _auth_service
 
+def get_user_profile_service_dependency() -> UserProfileService:
+    """
+    Dépendance FastAPI pour obtenir le service de profils utilisateur
+    """
+    global _user_profile_service
+    
+    if _user_profile_service is None:
+        _user_profile_service = get_user_profile_service()
+    
+    return _user_profile_service
+
+def get_rbac_service_dependency() -> RBACService:
+    """
+    Dépendance FastAPI pour obtenir le service RBAC
+    """
+    global _rbac_service
+    
+    if _rbac_service is None:
+        _rbac_service = get_rbac_service()
+    
+    return _rbac_service
+
+def get_security_audit_service_dependency() -> SecurityAuditService:
+    """
+    Dépendance FastAPI pour obtenir le service d'audit de sécurité
+    """
+    global _security_audit_service
+    
+    if _security_audit_service is None:
+        _security_audit_service = get_security_audit_service()
+    
+    return _security_audit_service
+
+def get_cicd_service_dependency() -> CICDService:
+    """
+    Dépendance FastAPI pour obtenir le service CI/CD
+    """
+    global _cicd_service
+    
+    if _cicd_service is None:
+        _cicd_service = get_cicd_service()
+    
+    return _cicd_service
+
+def get_auto_deployment_service(
+    db: AsyncSession = Depends(get_async_session),
+    security_service: SecurityAuditService = Depends(get_security_audit_service_dependency),
+    rbac_service: RBACService = Depends(get_rbac_service_dependency)
+) -> AutoDeploymentService:
+    """
+    Factory function pour créer le service de déploiement automatique
+    Utilisé comme dependency FastAPI avec injection des dépendances
+    """
+    return AutoDeploymentService(
+        db_session=db,
+        security_service=security_service,
+        rbac_service=rbac_service
+    )
+
+def get_swarm_service(
+    db: AsyncSession = Depends(get_async_session),
+    security_service: SecurityAuditService = Depends(get_security_audit_service_dependency),
+    rbac_service: RBACService = Depends(get_rbac_service_dependency)
+) -> SwarmService:
+    """
+    Factory function pour créer le service Swarm
+    Utilisé comme dependency FastAPI avec injection des dépendances
+    """
+    return SwarmService(
+        db_session=db,
+        security_service=security_service,
+        rbac_service=rbac_service
+    )
+
+def get_environment_service(
+    db: AsyncSession = Depends(get_async_session),
+    security_service: SecurityAuditService = Depends(get_security_audit_service_dependency),
+    rbac_service: RBACService = Depends(get_rbac_service_dependency),
+    docker_manager: DockerManager = Depends(get_docker_manager)
+) -> EnvironmentService:
+    """
+    Factory function pour créer le service des environnements
+    Utilisé comme dependency FastAPI avec injection des dépendances
+    """
+    return EnvironmentService(
+        db_session=db,
+        security_service=security_service,
+        rbac_service=rbac_service,
+        docker_manager=docker_manager
+    )
+
 async def startup_services():
     """
     Démarre tous les services au startup de l'application
@@ -99,12 +207,62 @@ async def startup_services():
     
     # Nettoie les sessions expirées au démarrage
     auth_service.cleanup_expired_sessions()
+    
+    # Initialise le service de profils utilisateur
+    profile_service = get_user_profile_service_dependency()
+    # Le service de profils n'a pas besoin de start() car il est stateless
+    
+    # Initialise le service RBAC
+    rbac_service = get_rbac_service_dependency()
+    # Initialiser les rôles et permissions par défaut
+    await rbac_service.initialize_default_roles_and_permissions()
+    
+    # Nettoyer les assignations de rôles expirées
+    await rbac_service.cleanup_expired_role_assignments()
+    
+    # Initialise le service d'audit de sécurité
+    security_audit_service = get_security_audit_service_dependency()
+    await security_audit_service.start()
+    
+    # Initialise le service CI/CD
+    cicd_service = get_cicd_service_dependency()
+    await cicd_service.start()
+    
+    # Initialise le service d'environnements
+    environment_service = _environment_service
+    if environment_service:
+        await environment_service.start_monitoring()
 
 async def shutdown_services():
     """
     Arrête tous les services au shutdown de l'application
     """
-    global _alerts_service, _metrics_collector, _docker_client, _log_optimization_service, _auth_service
+    global _alerts_service, _metrics_collector, _docker_client, _log_optimization_service, _auth_service, _user_profile_service, _rbac_service, _security_audit_service, _cicd_service, _environment_service
+    
+    # Arrêt du service CI/CD
+    if _cicd_service:
+        await _cicd_service.stop()
+        _cicd_service = None
+    
+    # Arrêt du service d'environnements
+    if _environment_service:
+        await _environment_service.stop_monitoring()
+        _environment_service = None
+    
+    # Arrêt du service d'audit de sécurité
+    if _security_audit_service:
+        await _security_audit_service.stop()
+        _security_audit_service = None
+    
+    # Nettoyage du service RBAC
+    if _rbac_service:
+        # Nettoyer les assignations expirées une dernière fois
+        await _rbac_service.cleanup_expired_role_assignments()
+        _rbac_service = None
+    
+    # Nettoie le service de profils utilisateur
+    if _user_profile_service:
+        _user_profile_service = None
     
     # Nettoie les sessions d'authentification
     if _auth_service:
@@ -126,7 +284,7 @@ async def shutdown_services():
         await _metrics_collector.stop()
         _metrics_collector = None
     
-    # Ferme le client Docker
-    if _docker_client:
-        _docker_client.close()
-        _docker_client = None
+    # Ferme le manager Docker
+    if _docker_manager:
+        _docker_manager.close()
+        _docker_manager = None

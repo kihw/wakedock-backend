@@ -4,7 +4,7 @@ Routeur principal pour l'API WakeDock
 from fastapi import APIRouter
 from wakedock.api.routes import (
     health, containers, services, images, logs, system,
-    monitoring, centralized_logs, analytics, alerts, logs_optimization, auth
+    monitoring, centralized_logs, analytics, alerts, logs_optimization, auth, user_profile, rbac, security_audit, cicd, auto_deployment, swarm
 )
 
 # Créer le routeur principal
@@ -23,5 +23,11 @@ api_router.include_router(analytics.router, tags=["analytics"])
 api_router.include_router(alerts.router, tags=["alerts"])
 api_router.include_router(logs_optimization.router, tags=["logs-optimization"])
 api_router.include_router(auth.router, tags=["authentication"])
+api_router.include_router(user_profile.router, tags=["user-profile"])
+api_router.include_router(rbac.router, tags=["rbac"])
+api_router.include_router(security_audit.router, tags=["security-audit"])
+api_router.include_router(cicd.router, tags=["ci-cd"])
+api_router.include_router(auto_deployment.router, tags=["auto-deployment"])
+api_router.include_router(swarm.router, tags=["swarm"])
 
 __all__ = ["api_router"]

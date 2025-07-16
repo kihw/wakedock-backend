@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import logging
 
-from wakedock.api.routes import services, health, proxy, system, containers, container_lifecycle, images, container_logs, compose_stacks, env_files, logs, centralized_logs, monitoring, analytics
+from wakedock.api.routes import services, health, proxy, system, containers, container_lifecycle, images, container_logs, compose_stacks, env_files, logs, centralized_logs, monitoring, analytics, environment
 from wakedock.api.routes import alerts
 from wakedock.api.auth.routes import router as auth_router
 from wakedock.api.middleware import ProxyMiddleware
@@ -136,14 +136,19 @@ def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService, 
             analytics.router,
             tags=["analytics"]
         )
-    
-    # Alerts routes
+     # Alerts routes
     if alerts:
         app.include_router(
             alerts.router,
             tags=["alerts"]
         )
-    
+
+    # Environment management routes
+    app.include_router(
+        environment.router,
+        tags=["environments"]
+    )
+
     app.include_router(
         proxy.router,
         prefix="",

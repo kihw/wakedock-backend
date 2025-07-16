@@ -2,7 +2,7 @@
 Modèle de données pour les utilisateurs
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional, List
 
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey
@@ -47,6 +47,24 @@ class User(Base):
     # Relations
     roles = relationship("UserRole", back_populates="user", cascade="all, delete-orphan")
     audit_logs = relationship("AuditLog", back_populates="user")
+    
+    # Relations Swarm
+    swarm_clusters = relationship("SwarmCluster", back_populates="creator")
+    swarm_services = relationship("SwarmService", back_populates="creator")
+    swarm_networks = relationship("SwarmNetwork", back_populates="creator")
+    swarm_secrets = relationship("SwarmSecret", back_populates="creator")
+    swarm_configs = relationship("SwarmConfig", back_populates="creator")
+    swarm_stacks = relationship("SwarmStack", back_populates="creator")
+    swarm_load_balancers = relationship("SwarmLoadBalancer", back_populates="creator")
+    
+    # Relations Environment
+    environments = relationship("Environment", back_populates="creator")
+    environment_variables = relationship("EnvironmentVariable", back_populates="creator")
+    environment_configs = relationship("EnvironmentConfig", back_populates="creator")
+    environment_templates = relationship("EnvironmentTemplate", back_populates="creator")
+    build_promotions_created = relationship("BuildPromotion", foreign_keys="BuildPromotion.created_by", back_populates="creator")
+    build_promotions_approved = relationship("BuildPromotion", foreign_keys="BuildPromotion.approved_by", back_populates="approver")
+    promotion_approvals = relationship("PromotionApproval", back_populates="user")
 
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', email='{self.email}')>"
