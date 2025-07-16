@@ -5,7 +5,7 @@ Modèle de données pour les utilisateurs
 from datetime import datetime, timedelta
 from typing import Optional, List
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -47,6 +47,7 @@ class User(Base):
     # Relations
     roles = relationship("UserRole", back_populates="user", cascade="all, delete-orphan")
     audit_logs = relationship("AuditLog", back_populates="user")
+    theme_preferences = relationship("UserThemePreferences", back_populates="user", uselist=False, cascade="all, delete-orphan")
     
     # Relations Swarm
     swarm_clusters = relationship("SwarmCluster", back_populates="creator")
@@ -230,3 +231,29 @@ class AuditLog(Base):
 
     def __repr__(self):
         return f"<AuditLog(id={self.id}, action='{self.action}', user_id={self.user_id})>"
+
+
+class UserThemePreferences(Base):
+    """
+    Préférences de thème utilisateur
+    """
+    __tablename__ = "user_theme_preferences"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, unique=True)
+    
+    # Paramètres de thème
+    theme_mode = Column(String(20), default="auto", nullable=False)  # light, dark, auto
+    custom_colors = Column(JSON, default=dict, nullable=False)  # Couleurs personnalisées
+    animations_enabled = Column(Boolean, default=True, nullable=False)
+    transitions_enabled = Column(Boolean, default=True, nullable=False)
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relations
+    user = relationship("User", back_populates="theme_preferences")
+
+    def __repr__(self):
+        return f"<UserThemePreferences(id={self.id}, user_id={self.user_id}, theme_mode='{self.theme_mode}')>"

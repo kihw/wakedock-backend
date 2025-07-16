@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wakedock"
-version = "0.4.4"
+version = "0.5.1"
 description = "A comprehensive Wake-on-LAN and reverse proxy management system"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -214,7 +214,7 @@ force_alphabetical_sort_within_sections = true
 
 # MyPy configuration
 [tool.mypy]
-python_version = "0.3.1"
+python_version = "0.4.4"
 check_untyped_defs = true
 disallow_any_generics = true
 disallow_incomplete_defs = true
@@ -234,7 +234,7 @@ disallow_incomplete_defs = false
 
 # Pytest configuration
 [tool.pytest.ini_options]
-minversion = "0.3.1"
+minversion = "0.4.4"
 addopts = [
     "--strict-markers",
     "--strict-config",
@@ -324,7 +324,7 @@ max-parents = 10
 # Commitizen configuration
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.3.1"
+version = "0.4.4"
 version_files = [
     "pyproject.toml:version",
     "src/wakedock/__init__.py:__version__",
@@ -345,7 +345,7 @@ style = [
 # Ruff configuration (optional alternative to flake8)
 [tool.ruff]
 line-length = 88
-target-version = "0.3.1"
+target-version = "0.4.4"
 select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
