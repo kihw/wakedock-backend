@@ -26,15 +26,26 @@ Version: 0.4.2
 """
 
 from datetime import datetime
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from sqlalchemy import (
-    Column, Integer, String, Text, Boolean, DateTime, 
-    ForeignKey, JSON, Float, UniqueConstraint, Index
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    JSON,
+    String,
+    Text,
+    UniqueConstraint,
 )
-from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from wakedock.models.base import Base
+
 
 class AutoDeployment(Base):
     """Configuration de déploiement automatique depuis repositories Git"""
@@ -488,7 +499,7 @@ def add_deployment_relations_to_user():
     À appeler après import du modèle User.
     """
     from wakedock.models.user import User
-    
+
     # Ajouter relations si pas déjà présentes
     if not hasattr(User, 'auto_deployments'):
         User.auto_deployments = relationship("AutoDeployment", back_populates="user", 

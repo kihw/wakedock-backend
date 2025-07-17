@@ -5,12 +5,9 @@ Provides Redis-based rate limiting for API endpoints and user actions.
 """
 
 import time
-import json
-import logging
-from typing import Dict, List, Optional, Tuple, Any
-from datetime import datetime, timedelta
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, Optional
 
 try:
     import redis
@@ -20,7 +17,6 @@ except ImportError:
     redis = None
 
 from wakedock.logging import get_logger
-
 
 logger = get_logger(__name__)
 
@@ -576,7 +572,6 @@ class RateLimitMiddleware:
             result = self.rate_limiter.check_rate_limit(rule_name, identifier)
             
             if not result.allowed:
-                from fastapi import HTTPException
                 from fastapi.responses import JSONResponse
                 
                 return JSONResponse(

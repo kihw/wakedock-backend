@@ -1,14 +1,15 @@
 """
 Routes API pour la gestion des containers Docker
 """
-from fastapi import APIRouter, HTTPException, Depends, status
-from typing import List, Optional, Dict, Any
-import docker
-from docker.errors import NotFound, APIError
+from typing import Any, Dict, List, Optional
+
+from docker.errors import APIError, NotFound
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
+
+from wakedock.api.auth.dependencies import get_current_user
 from wakedock.core.docker_manager import DockerManager
 from wakedock.core.validation import ValidationError
-from wakedock.api.auth.dependencies import get_current_user
 
 router = APIRouter(prefix="/containers", tags=["containers"])
 

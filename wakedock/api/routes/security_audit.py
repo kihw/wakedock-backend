@@ -2,18 +2,20 @@
 Routes API pour l'audit de sécurité avancé
 """
 from datetime import datetime, timedelta
-from typing import List, Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
-from wakedock.core.security_audit_service import (
-    get_security_audit_service,
-    SecurityAuditService,
-    SecurityEventType,
-    SecurityEventData,
-    AnomalyType
-)
+
 from wakedock.core.auth_middleware import PermissionRequired
 from wakedock.core.dependencies import get_current_user
+from wakedock.core.security_audit_service import (
+    AnomalyType,
+    get_security_audit_service,
+    SecurityAuditService,
+    SecurityEventData,
+    SecurityEventType,
+)
 from wakedock.models.user import User
 
 router = APIRouter(prefix="/security-audit", tags=["security-audit"])

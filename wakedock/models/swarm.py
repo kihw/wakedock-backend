@@ -2,9 +2,20 @@
 Modèles de base de données pour la gestion Docker Swarm
 """
 from datetime import datetime
-from typing import Dict, List, Any, Optional
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Text, JSON, ForeignKey, Float
+
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    JSON,
+    String,
+    Text,
+)
 from sqlalchemy.orm import relationship
+
 from wakedock.database.database import Base
 
 

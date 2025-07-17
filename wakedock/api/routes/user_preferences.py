@@ -1,22 +1,23 @@
 """
 API Routes pour les préférences de thème utilisateur
 """
-import logging
-from typing import Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile
-from fastapi.responses import JSONResponse, FileResponse
-from pydantic import BaseModel, Field
-from datetime import datetime
 import json
-import tempfile
+import logging
 import os
+import tempfile
+from datetime import datetime
+from typing import Dict
+
+from fastapi import APIRouter, Depends, File, HTTPException, status, UploadFile
+from fastapi.responses import FileResponse, JSONResponse
+from pydantic import BaseModel, Field
+from sqlalchemy import delete, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from wakedock.core.auth_middleware import require_authenticated_user
-from wakedock.models.user import User
 from wakedock.database.database import get_async_session
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, delete
-from sqlalchemy.orm import selectinload
+from wakedock.models.user import User
 
 logger = logging.getLogger(__name__)
 
@@ -147,7 +148,7 @@ async def update_user_theme_preferences(
             )
         
         from wakedock.models.user import UserThemePreferences
-        
+
         # Si l'utilisateur n'a pas de préférences existantes, en créer
         if not hasattr(user, 'theme_preferences') or not user.theme_preferences:
             new_prefs = UserThemePreferences(
@@ -215,7 +216,7 @@ async def reset_user_theme_preferences(
     """
     try:
         from wakedock.models.user import UserThemePreferences
-        
+
         # Supprime les préférences existantes
         query = delete(UserThemePreferences).where(UserThemePreferences.user_id == current_user.id)
         await db.execute(query)

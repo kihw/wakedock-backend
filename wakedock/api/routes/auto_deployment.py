@@ -31,23 +31,28 @@ Version: 0.4.2
 import asyncio
 import json
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
-from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field, validator
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
-from sqlalchemy import select, func
 
 from wakedock.core.auto_deployment_service import AutoDeploymentService
-from wakedock.core.dependencies import get_db, get_current_user, get_auto_deployment_service
-from wakedock.core.rbac_service import RBACService, get_rbac_service
-from wakedock.models.user import User
-from wakedock.models.deployment import (
-    AutoDeployment, DeploymentHistory, DeploymentSecret, 
-    DeploymentMetrics, ContainerHealth
+from wakedock.core.dependencies import (
+    get_auto_deployment_service,
+    get_current_user,
+    get_db,
 )
+from wakedock.core.rbac_service import get_rbac_service, RBACService
+from wakedock.models.deployment import (
+    AutoDeployment,
+    DeploymentHistory,
+    DeploymentSecret,
+)
+from wakedock.models.user import User
 
 logger = logging.getLogger(__name__)
 

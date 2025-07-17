@@ -2,12 +2,13 @@
 Health check endpoints
 """
 
-from fastapi import APIRouter, Depends
-from pydantic import BaseModel
-from typing import Dict, Any
-import psutil
 import time
 from datetime import datetime
+from typing import Any, Dict
+
+import psutil
+from fastapi import APIRouter
+from pydantic import BaseModel
 
 from wakedock.config import get_settings
 
@@ -25,7 +26,7 @@ class HealthResponse(BaseModel):
 @router.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint"""
-    settings = get_settings()
+    get_settings()
     
     # System metrics
     system_info = {

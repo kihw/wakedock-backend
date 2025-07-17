@@ -2,15 +2,15 @@
 API Routes pour la gestion Docker Swarm
 """
 import logging
-from typing import List, Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
-from fastapi.responses import StreamingResponse
-from pydantic import BaseModel, Field
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from wakedock.core.swarm_service import SwarmService, SwarmClusterInfo, SwarmServiceInfo, SwarmNodeInfo
-from wakedock.core.dependencies import get_swarm_service
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel, Field
+
 from wakedock.core.auth_middleware import require_authenticated_user
+from wakedock.core.dependencies import get_swarm_service
+from wakedock.core.swarm_service import SwarmService
 from wakedock.models.user import User
 
 logger = logging.getLogger(__name__)
@@ -433,7 +433,7 @@ async def get_swarm_service(
             updated_at=service_info.updated_at
         )
         
-    except ValueError as e:
+    except ValueError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Service {service_id} non trouvé"

@@ -6,18 +6,17 @@ Gestion complète des tokens JWT avec refresh automatique
 import os
 import secrets
 from datetime import datetime, timedelta
-from typing import Optional, Dict, Any, List
 from functools import lru_cache
+from typing import Any, Dict, List, Optional
 
 import jwt
-from passlib.context import CryptContext
 from fastapi import HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPBearer
+from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from wakedock.models.user import User
-from wakedock.database.database import get_db
 from wakedock.logging import get_logger
+from wakedock.models.user import User
 
 logger = get_logger(__name__)
 
@@ -167,7 +166,7 @@ class AuthService:
         
         user_id = int(payload["sub"])
         username = payload["username"]
-        session_id = payload["session_id"]
+        payload["session_id"]
         
         # Récupérer les permissions de l'utilisateur depuis la DB
         # TODO: Implémenter la récupération des permissions

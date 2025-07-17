@@ -2,10 +2,10 @@
 System management endpoints
 """
 
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
-from typing import Dict, Any
-from datetime import datetime
 
 from wakedock.core.monitoring import MonitoringService
 

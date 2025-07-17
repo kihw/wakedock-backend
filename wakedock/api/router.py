@@ -2,9 +2,26 @@
 Routeur principal pour l'API WakeDock
 """
 from fastapi import APIRouter
+
 from wakedock.api.routes import (
-    health, containers, services, images, logs, system,
-    monitoring, centralized_logs, analytics, alerts, logs_optimization, auth, user_profile, rbac, security_audit, cicd, auto_deployment, swarm
+    alerts,
+    analytics,
+    auth,
+    auto_deployment,
+    centralized_logs,
+    cicd,
+    containers,
+    health,
+    images,
+    logs,
+    logs_optimization,
+    monitoring,
+    rbac,
+    security_audit,
+    services,
+    swarm,
+    system,
+    user_profile,
 )
 
 # Créer le routeur principal

@@ -4,13 +4,13 @@ Service WebSocket pour le streaming temps réel des métriques de monitoring
 import asyncio
 import json
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, List, Set, Optional, Any
-from fastapi import WebSocket, WebSocketDisconnect
+from datetime import datetime
 from enum import Enum
-import weakref
+from typing import Any, Dict, List, Optional, Set
 
-from wakedock.core.metrics_collector import MetricsCollector, ContainerMetrics, Alert
+from fastapi import WebSocket, WebSocketDisconnect
+
+from wakedock.core.metrics_collector import Alert, ContainerMetrics, MetricsCollector
 
 logger = logging.getLogger(__name__)
 

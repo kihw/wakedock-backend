@@ -1,13 +1,14 @@
 """
 Gestionnaire des réseaux Docker
 """
-import docker
-from docker.errors import NotFound, APIError
-from typing import List, Dict, Optional, Any, Tuple
 import ipaddress
-import re
-from pydantic import BaseModel, Field, validator
 import logging
+import re
+from typing import Any, Dict, List, Optional
+
+import docker
+from docker.errors import NotFound
+from pydantic import BaseModel, Field, validator
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +58,6 @@ class NetworkInfo(BaseModel):
 
 class NetworkValidationError(Exception):
     """Exception pour les erreurs de validation de réseau"""
-    pass
 
 class NetworkManager:
     """Gestionnaire des réseaux Docker"""

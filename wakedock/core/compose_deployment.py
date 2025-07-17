@@ -1,22 +1,21 @@
 """
 Gestionnaire de déploiement pour les stacks Docker Compose
 """
+import json
+import logging
 import os
-import subprocess
-import tempfile
 import shutil
-from typing import Dict, List, Optional, Any, Tuple
-from pathlib import Path
+import subprocess
+import time
 from dataclasses import dataclass
 from enum import Enum
-import logging
-import time
-import json
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-from wakedock.core.compose_parser import ComposeFile, ComposeParser
+from wakedock.core.compose_parser import ComposeParser
 from wakedock.core.compose_validator import ComposeValidator
-from wakedock.core.env_manager import EnvManager, EnvFile
 from wakedock.core.dependency_manager import DependencyManager
+from wakedock.core.env_manager import EnvManager
 
 logger = logging.getLogger(__name__)
 
@@ -273,7 +272,7 @@ class ComposeDeploymentManager:
         """
         try:
             # Arrêter d'abord la stack
-            stop_result = self.stop_stack(stack_name)
+            self.stop_stack(stack_name)
             
             # Supprimer les volumes si demandé
             if remove_volumes:
@@ -396,7 +395,7 @@ class ComposeDeploymentManager:
                 f.write(env_file_content)
         elif env_variables:
             # Créer un fichier .env à partir des variables
-            env_file = self.env_manager.create_env_file(str(env_file_path), env_variables)
+            self.env_manager.create_env_file(str(env_file_path), env_variables)
         else:
             # Créer un fichier .env minimal
             with open(env_file_path, 'w', encoding='utf-8') as f:

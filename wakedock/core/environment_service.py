@@ -3,27 +3,27 @@ Service de gestion des environnements de déploiement
 Implémente la séparation dev/staging/prod avec promotion automatique
 """
 import asyncio
-import json
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
+from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, or_, func
 from sqlalchemy.orm import selectinload
 
-from wakedock.models.environment import (
-    Environment, EnvironmentVariable, DeploymentPromotion,
-    EnvironmentConfig, EnvironmentHealth, BuildPromotion,
-    PromotionRule, PromotionApproval
-)
-from wakedock.core.security_audit_service import SecurityAuditService
-from wakedock.core.rbac_service import RBACService
-from wakedock.models.audit import AuditAction
 from wakedock.core.docker_manager import DockerManager
-
+from wakedock.core.rbac_service import RBACService
+from wakedock.core.security_audit_service import SecurityAuditService
+from wakedock.models.audit import AuditAction
+from wakedock.models.environment import (
+    BuildPromotion,
+    Environment,
+    EnvironmentHealth,
+    EnvironmentVariable,
+    PromotionApproval,
+)
 
 logger = logging.getLogger(__name__)
 

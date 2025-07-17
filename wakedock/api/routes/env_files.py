@@ -1,13 +1,14 @@
 """
 Routes API pour la gestion des fichiers .env
 """
-from fastapi import APIRouter, HTTPException, Depends, status
-from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field
 import logging
+from typing import Any, Dict, List, Optional
 
-from wakedock.core.env_manager import EnvManager, EnvFile, EnvVariable
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel, Field
+
 from wakedock.api.auth.dependencies import get_current_user
+from wakedock.core.env_manager import EnvFile, EnvManager, EnvVariable
 
 logger = logging.getLogger(__name__)
 
@@ -298,7 +299,6 @@ async def delete_env_file(
     Supprime un fichier .env
     """
     try:
-        import os
         from pathlib import Path
         
         file_obj = Path(file_path)

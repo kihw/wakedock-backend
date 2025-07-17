@@ -5,15 +5,15 @@ Routes d'authentification pour WakeDock
 from datetime import datetime
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from pydantic import BaseModel, EmailStr
 
-from wakedock.core.auth_service import get_auth_service, AuthService
+from wakedock.core.auth_service import AuthService, get_auth_service
 from wakedock.database.database import get_db
-from wakedock.models.user import User, AuditLog
 from wakedock.logging import get_logger
+from wakedock.models.user import AuditLog, User
 
 logger = get_logger(__name__)
 

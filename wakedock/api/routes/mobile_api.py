@@ -2,28 +2,29 @@
 API routes optimisées pour clients mobiles - Version 0.5.2
 Responsive design et Progressive Web App optimizations
 """
+import gzip
 import json
 import logging
-import gzip
-from typing import Optional, Dict, Any, List
-from datetime import datetime, timedelta
-from fastapi import APIRouter, Request, Response, HTTPException, Depends, Query
+from datetime import datetime
+from typing import Any, Dict, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from wakedock.core.mobile_optimization_service import (
-    MobileOptimizationService, 
-    ClientType, 
-    CompressionType
-)
+from wakedock.core.auth_service import AuthService
 from wakedock.core.dependencies import (
+    get_auth_service_dependency,
     get_docker_manager,
     get_metrics_collector,
-    get_auth_service_dependency
 )
 from wakedock.core.docker_manager import DockerManager
 from wakedock.core.metrics_collector import MetricsCollector
-from wakedock.core.auth_service import AuthService
+from wakedock.core.mobile_optimization_service import (
+    ClientType,
+    CompressionType,
+    MobileOptimizationService,
+)
 
 logger = logging.getLogger(__name__)
 

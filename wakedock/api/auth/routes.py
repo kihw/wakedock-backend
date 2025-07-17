@@ -1,23 +1,19 @@
 """Authentication routes for WakeDock API."""
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from wakedock.database.database import get_db_session
-from wakedock.database.models import User, UserRole
-from .models import (
-    UserCreate, UserUpdate, UserResponse, UserLogin, 
-    Token, PasswordChange, PasswordReset, PasswordResetConfirm
-)
-from .password import hash_password, verify_password
+from wakedock.database.models import User
+
+from .dependencies import get_current_active_user, require_admin
 from .jwt import create_access_token, jwt_manager
-from .dependencies import (
-    get_current_user, get_current_active_user, 
-    require_admin, require_role
-)
+from .models import PasswordChange, Token, UserCreate, UserResponse, UserUpdate
+from .password import hash_password, verify_password
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 

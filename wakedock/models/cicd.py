@@ -1,10 +1,21 @@
 """
 Modèles de base de données pour le système CI/CD avec GitHub Actions
 """
-from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, JSON, ForeignKey, Index
+from datetime import datetime
+
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    JSON,
+    String,
+    Text,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from datetime import datetime
 
 Base = declarative_base()
 
@@ -315,7 +326,7 @@ def extend_user_model():
     """
     try:
         from wakedock.models.user import User
-        
+
         # Ajouter les relations si elles n'existent pas déjà
         if not hasattr(User, 'github_integrations'):
             User.github_integrations = relationship("GitHubIntegration", back_populates="creator")

@@ -2,14 +2,14 @@
 Service d'indexation pour la recherche rapide dans les logs
 """
 import asyncio
-import logging
-import sqlite3
 import json
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Set, Tuple
-from pathlib import Path
-import aiosqlite
+import logging
 from dataclasses import dataclass
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Dict, List, Optional, Set, Tuple
+
+import aiosqlite
 
 from wakedock.core.log_collector import LogEntry, LogLevel
 
@@ -267,7 +267,7 @@ class LogSearchService:
     def _extract_search_terms(self, message: str) -> Set[str]:
         """Extrait les termes de recherche d'un message"""
         import re
-        
+
         # Normalise le message
         message = message.lower()
         

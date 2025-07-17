@@ -1,10 +1,22 @@
 """
 Modèles de base de données pour l'audit de sécurité avancé
 """
-from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, Float, JSON, ForeignKey, Index
+from datetime import datetime
+
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    JSON,
+    String,
+    Text,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from datetime import datetime
 
 Base = declarative_base()
 
@@ -268,7 +280,7 @@ def extend_user_model():
     """
     try:
         from wakedock.models.user import User
-        
+
         # Ajouter les relations si elles n'existent pas déjà
         if not hasattr(User, 'security_events'):
             User.security_events = relationship("SecurityEvent", back_populates="user")

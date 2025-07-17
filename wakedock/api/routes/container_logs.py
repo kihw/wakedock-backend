@@ -1,14 +1,23 @@
 """
 Routes WebSocket pour les logs en temps réel des containers
 """
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, HTTPException, status
-from typing import Optional
 import asyncio
-import logging
 import json
+import logging
 from datetime import datetime
-from wakedock.core.docker_manager import DockerManager
+from typing import Optional
+
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    status,
+    WebSocket,
+    WebSocketDisconnect,
+)
+
 from wakedock.api.auth.dependencies import get_current_user
+from wakedock.core.docker_manager import DockerManager
 
 router = APIRouter(prefix="/containers", tags=["container-logs"])
 logger = logging.getLogger(__name__)

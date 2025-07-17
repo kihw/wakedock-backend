@@ -1,0 +1,530 @@
+{
+  "code_quality": {},
+  "architecture_issues": [
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/security/rate_limit.py",
+      "type": "high_complexity",
+      "complexity": 52,
+      "description": "File has high complexity (52 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/security/validation.py",
+      "type": "high_complexity",
+      "complexity": 76,
+      "description": "File has high complexity (76 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/compose_validator.py",
+      "type": "high_complexity",
+      "complexity": 71,
+      "description": "File has high complexity (71 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/cicd_service.py",
+      "type": "high_complexity",
+      "complexity": 53,
+      "description": "File has high complexity (53 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/security_audit_service.py",
+      "type": "high_complexity",
+      "complexity": 66,
+      "description": "File has high complexity (66 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/log_optimization_service.py",
+      "type": "high_complexity",
+      "complexity": 61,
+      "description": "File has high complexity (61 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/swarm_service.py",
+      "type": "high_complexity",
+      "complexity": 51,
+      "description": "File has high complexity (51 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/metrics_collector.py",
+      "type": "high_complexity",
+      "complexity": 66,
+      "description": "File has high complexity (66 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/dependency_manager.py",
+      "type": "high_complexity",
+      "complexity": 58,
+      "description": "File has high complexity (58 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/alerts_service.py",
+      "type": "high_complexity",
+      "complexity": 133,
+      "description": "File has high complexity (133 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/advanced_analytics.py",
+      "type": "high_complexity",
+      "complexity": 80,
+      "description": "File has high complexity (80 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/log_collector.py",
+      "type": "high_complexity",
+      "complexity": 67,
+      "description": "File has high complexity (67 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/auto_deployment_service.py",
+      "type": "high_complexity",
+      "complexity": 90,
+      "description": "File has high complexity (90 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/websocket_service.py",
+      "type": "high_complexity",
+      "complexity": 69,
+      "description": "File has high complexity (69 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/utils/validation.py",
+      "type": "high_complexity",
+      "complexity": 52,
+      "description": "File has high complexity (52 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/api/routes/alerts.py",
+      "type": "high_complexity",
+      "complexity": 83,
+      "description": "File has high complexity (83 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/api/routes/logs.py",
+      "type": "high_complexity",
+      "complexity": 57,
+      "description": "File has high complexity (57 control structures)"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/api/routes/auto_deployment.py",
+      "type": "high_complexity",
+      "complexity": 56,
+      "description": "File has high complexity (56 control structures)"
+    }
+  ],
+  "performance_issues": [],
+  "refactoring_opportunities": [
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/create_admin_user.py",
+      "type": "long_function",
+      "function": "create_admin_user",
+      "lines": 71,
+      "description": "Function 'create_admin_user' has 71 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/metrics.py",
+      "type": "long_function",
+      "function": "_init_metrics",
+      "lines": 219,
+      "description": "Function '_init_metrics' has 219 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/main.py",
+      "type": "long_function",
+      "function": "create_application",
+      "lines": 72,
+      "description": "Function 'create_application' has 72 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/logging.py",
+      "type": "long_function",
+      "function": "setup_logging",
+      "lines": 106,
+      "description": "Function 'setup_logging' has 106 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/logging.py",
+      "type": "too_many_parameters",
+      "function": "setup_logging",
+      "params": 6,
+      "description": "Function 'setup_logging' has 6 parameters, consider refactoring"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/logging.py",
+      "type": "long_function",
+      "function": "log_function_call",
+      "lines": 56,
+      "description": "Function 'log_function_call' has 56 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/logging.py",
+      "type": "long_function",
+      "function": "log_async_function_call",
+      "lines": 56,
+      "description": "Function 'log_async_function_call' has 56 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/test_docker_events_simple.py",
+      "type": "long_function",
+      "function": "test_event_aggregation",
+      "lines": 61,
+      "description": "Function 'test_event_aggregation' has 61 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/test_docker_events_simple.py",
+      "type": "long_function",
+      "function": "test_event_notification_rules",
+      "lines": 60,
+      "description": "Function 'test_event_notification_rules' has 60 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/test_websocket_simple.py",
+      "type": "long_function",
+      "function": "test_container_stats_messages",
+      "lines": 55,
+      "description": "Function 'test_container_stats_messages' has 55 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/test_api_endpoints_simple.py",
+      "type": "long_function",
+      "function": "test_container_list_response",
+      "lines": 78,
+      "description": "Function 'test_container_list_response' has 78 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/test_api_endpoints_simple.py",
+      "type": "long_function",
+      "function": "test_container_create_request",
+      "lines": 65,
+      "description": "Function 'test_container_create_request' has 65 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/test_api_endpoints_simple.py",
+      "type": "long_function",
+      "function": "test_container_stats_response",
+      "lines": 60,
+      "description": "Function 'test_container_stats_response' has 60 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/test_api_endpoints_simple.py",
+      "type": "long_function",
+      "function": "test_error_response_format",
+      "lines": 55,
+      "description": "Function 'test_error_response_format' has 55 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/test_api_endpoints_simple.py",
+      "type": "long_function",
+      "function": "test_system_info_response",
+      "lines": 67,
+      "description": "Function 'test_system_info_response' has 67 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/test_alerts_api.py",
+      "type": "large_class",
+      "class": "TestAlertsAPI",
+      "methods": 25,
+      "description": "Class 'TestAlertsAPI' has 25 methods, consider splitting"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/scripts/init_auth.py",
+      "type": "long_function",
+      "function": "create_default_permissions",
+      "lines": 75,
+      "description": "Function 'create_default_permissions' has 75 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/scripts/init_auth.py",
+      "type": "long_function",
+      "function": "create_default_roles",
+      "lines": 93,
+      "description": "Function 'create_default_roles' has 93 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/database/database.py",
+      "type": "long_function",
+      "function": "initialize",
+      "lines": 51,
+      "description": "Function 'initialize' has 51 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/dashboard_service.py",
+      "type": "long_function",
+      "function": "_get_available_widget_types",
+      "lines": 59,
+      "description": "Function '_get_available_widget_types' has 59 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/rbac_service.py",
+      "type": "long_function",
+      "function": "__init__",
+      "lines": 178,
+      "description": "Function '__init__' has 178 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/docker_manager.py",
+      "type": "long_function",
+      "function": "create_container",
+      "lines": 83,
+      "description": "Function 'create_container' has 83 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/docker_manager.py",
+      "type": "too_many_parameters",
+      "function": "create_container",
+      "params": 9,
+      "description": "Function 'create_container' has 9 parameters, consider refactoring"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/security_audit_service.py",
+      "type": "too_many_imports",
+      "count": 22,
+      "description": "File has 22 imports, consider refactoring"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/alerts_service.py",
+      "type": "long_function",
+      "function": "__init__",
+      "lines": 54,
+      "description": "Function '__init__' has 54 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/env_manager.py",
+      "type": "long_function",
+      "function": "generate_env_template",
+      "lines": 65,
+      "description": "Function 'generate_env_template' has 65 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/compose_deployment.py",
+      "type": "long_function",
+      "function": "deploy_stack",
+      "lines": 132,
+      "description": "Function 'deploy_stack' has 132 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/compose_deployment.py",
+      "type": "too_many_parameters",
+      "function": "deploy_stack",
+      "params": 6,
+      "description": "Function 'deploy_stack' has 6 parameters, consider refactoring"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/compose_deployment.py",
+      "type": "long_function",
+      "function": "stop_stack",
+      "lines": 67,
+      "description": "Function 'stop_stack' has 67 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/compose_deployment.py",
+      "type": "long_function",
+      "function": "get_stack_status",
+      "lines": 58,
+      "description": "Function 'get_stack_status' has 58 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/environment_service.py",
+      "type": "long_function",
+      "function": "__init__",
+      "lines": 56,
+      "description": "Function '__init__' has 56 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/validation.py",
+      "type": "long_function",
+      "function": "validate_complete_container_config",
+      "lines": 55,
+      "description": "Function 'validate_complete_container_config' has 55 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/validation.py",
+      "type": "too_many_parameters",
+      "function": "validate_complete_container_config",
+      "params": 7,
+      "description": "Function 'validate_complete_container_config' has 7 parameters, consider refactoring"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/mobile_optimization_service.py",
+      "type": "long_function",
+      "function": "get_optimal_response_format",
+      "lines": 78,
+      "description": "Function 'get_optimal_response_format' has 78 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/mobile_optimization_service.py",
+      "type": "long_function",
+      "function": "_aggregate_metrics",
+      "lines": 53,
+      "description": "Function '_aggregate_metrics' has 53 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/user_profile_service.py",
+      "type": "long_function",
+      "function": "get_user_profile",
+      "lines": 58,
+      "description": "Function 'get_user_profile' has 58 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/user_profile_service.py",
+      "type": "long_function",
+      "function": "update_user_profile",
+      "lines": 70,
+      "description": "Function 'update_user_profile' has 70 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/auto_deployment_service.py",
+      "type": "too_many_imports",
+      "count": 25,
+      "description": "File has 25 imports, consider refactoring"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/network_manager.py",
+      "type": "long_function",
+      "function": "remove_network",
+      "lines": 55,
+      "description": "Function 'remove_network' has 55 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/network_manager.py",
+      "type": "long_function",
+      "function": "connect_container",
+      "lines": 53,
+      "description": "Function 'connect_container' has 53 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/network_manager.py",
+      "type": "too_many_parameters",
+      "function": "connect_container",
+      "params": 6,
+      "description": "Function 'connect_container' has 6 parameters, consider refactoring"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/network_manager.py",
+      "type": "long_function",
+      "function": "inspect_network_connectivity",
+      "lines": 51,
+      "description": "Function 'inspect_network_connectivity' has 51 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/core/network_manager.py",
+      "type": "long_function",
+      "function": "get_network_usage_report",
+      "lines": 55,
+      "description": "Function 'get_network_usage_report' has 55 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/utils/validation.py",
+      "type": "long_function",
+      "function": "validate_service_config",
+      "lines": 63,
+      "description": "Function 'validate_service_config' has 63 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/templates/loading.py",
+      "type": "long_function",
+      "function": "get_loading_page",
+      "lines": 229,
+      "description": "Function 'get_loading_page' has 229 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/api/app.py",
+      "type": "long_function",
+      "function": "create_app",
+      "lines": 215,
+      "description": "Function 'create_app' has 215 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/wakedock/api/routes/auth.py",
+      "type": "too_many_parameters",
+      "function": "log_audit_action",
+      "params": 7,
+      "description": "Function 'log_audit_action' has 7 parameters, consider refactoring"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/unit/test_docker_events_simple.py",
+      "type": "long_function",
+      "function": "test_event_aggregation",
+      "lines": 61,
+      "description": "Function 'test_event_aggregation' has 61 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/unit/test_docker_events_simple.py",
+      "type": "long_function",
+      "function": "test_event_notification_rules",
+      "lines": 60,
+      "description": "Function 'test_event_notification_rules' has 60 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/unit/test_websocket_simple.py",
+      "type": "long_function",
+      "function": "test_container_stats_messages",
+      "lines": 55,
+      "description": "Function 'test_container_stats_messages' has 55 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/unit/test_api_endpoints_simple.py",
+      "type": "long_function",
+      "function": "test_container_list_response",
+      "lines": 78,
+      "description": "Function 'test_container_list_response' has 78 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/unit/test_api_endpoints_simple.py",
+      "type": "long_function",
+      "function": "test_container_create_request",
+      "lines": 65,
+      "description": "Function 'test_container_create_request' has 65 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/unit/test_api_endpoints_simple.py",
+      "type": "long_function",
+      "function": "test_container_stats_response",
+      "lines": 60,
+      "description": "Function 'test_container_stats_response' has 60 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/unit/test_api_endpoints_simple.py",
+      "type": "long_function",
+      "function": "test_error_response_format",
+      "lines": 55,
+      "description": "Function 'test_error_response_format' has 55 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/unit/test_api_endpoints_simple.py",
+      "type": "long_function",
+      "function": "test_system_info_response",
+      "lines": 67,
+      "description": "Function 'test_system_info_response' has 67 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/api/test_services.py",
+      "type": "long_function",
+      "function": "mock_orchestrator",
+      "lines": 52,
+      "description": "Function 'mock_orchestrator' has 52 lines, consider breaking it down"
+    },
+    {
+      "file": "/Docker/code/wakedock-env/wakedock-backend/tests/api/test_services.py",
+      "type": "large_class",
+      "class": "TestServicesAPI",
+      "methods": 23,
+      "description": "Class 'TestServicesAPI' has 23 methods, consider splitting"
+    }
+  ],
+  "technical_debt": [],
+  "recommendations": [
+    {
+      "priority": "high",
+      "category": "code_quality",
+      "title": "Refactor long functions and classes",
+      "description": "Several functions and classes are too large and should be broken down",
+      "count": 57
+    },
+    {
+      "priority": "medium",
+      "category": "architecture",
+      "title": "Reduce code complexity",
+      "description": "Some files have high complexity and should be refactored",
+      "count": 18
+    }
+  ]
+}

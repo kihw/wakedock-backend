@@ -4,18 +4,20 @@ Main application entry point
 
 import asyncio
 import logging
-import uvicorn
 from pathlib import Path
 
-from wakedock.config import get_settings
+import uvicorn
+
 from wakedock.api.app import create_app
-from wakedock.core.monitoring import MonitoringService
-from wakedock.core.orchestrator import DockerOrchestrator
+from wakedock.config import get_settings
 from wakedock.core.advanced_analytics import AdvancedAnalyticsService
 from wakedock.core.alerts_service import AlertsService
-from wakedock.core.metrics_collector import MetricsCollector
 from wakedock.core.log_optimization_service import LogOptimizationService
+from wakedock.core.metrics_collector import MetricsCollector
+from wakedock.core.monitoring import MonitoringService
+from wakedock.core.orchestrator import DockerOrchestrator
 from wakedock.database.database import init_database
+
 
 # Create app instance for uvicorn
 def create_application():
@@ -82,7 +84,6 @@ def create_application():
             logger.warning(f"Failed to initialize Analytics/Alerts/LogOptimization services: {e}")
             analytics_service = None
             alerts_service = None
-            log_optimization_service = None
     
     # Connect monitoring service to orchestrator
     monitoring_service.set_orchestrator(orchestrator)

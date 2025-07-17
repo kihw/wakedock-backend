@@ -2,33 +2,49 @@
 API Routes pour le système d'alertes et notifications
 """
 import asyncio
+import csv
+import io
+import json
 import logging
 import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
-from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks, Query, Path
-from fastapi.responses import StreamingResponse, JSONResponse
-import json
-import csv
-import io
+from typing import List, Optional
+
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Path, Query
+from fastapi.responses import StreamingResponse
 
 from wakedock.core.alerts_service import (
-    AlertsService, AlertRule, NotificationTarget, AlertInstance,
-    NotificationChannel, AlertSeverity, EscalationLevel, AlertState
-)
-from wakedock.models.alerts import (
-    NotificationTargetRequest, NotificationTargetResponse,
-    AlertRuleRequest, AlertRuleResponse, AlertInstanceResponse,
-    AlertAcknowledgeRequest, AlertsFilterRequest, AlertsStatsResponse,
-    NotificationTestRequest, NotificationTestResponse,
-    AlertRuleTestRequest, AlertRuleTestResponse,
-    AlertsServiceStatusResponse, AlertsExportRequest,
-    BulkAlertActionRequest, BulkAlertActionResponse,
-    AlertMetricsRequest, AlertMetricsResponse,
-    ExternalMonitoringIntegration, AlertWebhookEvent,
-    DefaultAlertRules, SampleNotificationTargets
+    AlertInstance,
+    AlertRule,
+    AlertSeverity,
+    AlertsService,
+    AlertState,
+    EscalationLevel,
+    NotificationChannel,
+    NotificationTarget,
 )
 from wakedock.core.dependencies import get_alerts_service
+from wakedock.models.alerts import (
+    AlertAcknowledgeRequest,
+    AlertInstanceResponse,
+    AlertMetricsRequest,
+    AlertMetricsResponse,
+    AlertRuleRequest,
+    AlertRuleResponse,
+    AlertRuleTestRequest,
+    AlertRuleTestResponse,
+    AlertsExportRequest,
+    AlertsFilterRequest,
+    AlertsServiceStatusResponse,
+    AlertsStatsResponse,
+    BulkAlertActionRequest,
+    BulkAlertActionResponse,
+    DefaultAlertRules,
+    NotificationTargetRequest,
+    NotificationTargetResponse,
+    NotificationTestRequest,
+    NotificationTestResponse,
+)
 
 logger = logging.getLogger(__name__)
 

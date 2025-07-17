@@ -2,21 +2,19 @@
 Service d'analytics avancé pour les métriques de performance avec prédictions et tendances
 """
 import asyncio
-import logging
 import json
-import numpy as np
+import logging
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple, Any
-from dataclasses import dataclass, asdict
-from pathlib import Path
 from enum import Enum
-import aiofiles
-from scipy import stats
-from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import PolynomialFeatures
-import pandas as pd
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-from wakedock.core.metrics_collector import MetricsCollector, ContainerMetrics, MetricType
+import aiofiles
+import numpy as np
+from scipy import stats
+
+from wakedock.core.metrics_collector import ContainerMetrics, MetricsCollector
 
 logger = logging.getLogger(__name__)
 

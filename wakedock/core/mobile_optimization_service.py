@@ -2,13 +2,12 @@
 Service d'optimisation pour clients mobiles - Version 0.2.6
 """
 import gzip
-import json
 import logging
-from typing import Dict, Any, List, Optional, Union
-from datetime import datetime, timedelta
-from fastapi import Request
-import asyncio
+from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List
+
+from fastapi import Request
 
 logger = logging.getLogger(__name__)
 

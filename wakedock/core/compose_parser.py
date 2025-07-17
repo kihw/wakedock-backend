@@ -1,11 +1,11 @@
 """
 Parseur et gestionnaire pour les fichiers Docker Compose
 """
-import yaml
-import re
-from typing import Dict, List, Optional, Any, Tuple
-from pathlib import Path
 import logging
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import yaml
 from pydantic import BaseModel, Field, validator
 
 logger = logging.getLogger(__name__)
@@ -82,7 +82,6 @@ class ComposeFile(BaseModel):
 
 class ComposeValidationError(Exception):
     """Exception pour les erreurs de validation Docker Compose"""
-    pass
 
 class ComposeParser:
     """Parseur pour les fichiers Docker Compose"""

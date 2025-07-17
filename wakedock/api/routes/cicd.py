@@ -1,22 +1,24 @@
 """
 Routes API pour l'intégration CI/CD avec GitHub Actions
 """
+import logging
 from datetime import datetime
-from typing import List, Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, Request, BackgroundTasks, Query
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel, Field
-from wakedock.core.cicd_service import (
-    get_cicd_service,
-    CICDService,
-    GitHubActionConfig,
-    BuildStatus,
-    DeploymentEnvironment,
-    BuildResult
-)
+
 from wakedock.core.auth_middleware import PermissionRequired
+from wakedock.core.cicd_service import (
+    BuildResult,
+    BuildStatus,
+    CICDService,
+    DeploymentEnvironment,
+    get_cicd_service,
+    GitHubActionConfig,
+)
 from wakedock.core.dependencies import get_current_user
 from wakedock.models.user import User
-import logging
 
 logger = logging.getLogger(__name__)
 

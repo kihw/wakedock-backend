@@ -3,11 +3,19 @@ Modèle de données pour les utilisateurs
 """
 
 from datetime import datetime, timedelta
-from typing import Optional, List
+from typing import List
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, JSON
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    JSON,
+    String,
+    Text,
+)
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
 from wakedock.core.database import Base
 

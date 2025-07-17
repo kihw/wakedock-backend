@@ -3,12 +3,21 @@ Modèles de base de données pour la personnalisation des tableaux de bord - Wak
 """
 
 from datetime import datetime
-from typing import Optional, Dict, Any
-from sqlalchemy import Column, Integer, String, Text, JSON, Boolean, DateTime, ForeignKey
+
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    JSON,
+    String,
+    Text,
+)
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
 from wakedock.models.base import Base
+
 
 class DashboardLayout(Base):
     """Modèle pour les layouts de tableau de bord personnalisés"""

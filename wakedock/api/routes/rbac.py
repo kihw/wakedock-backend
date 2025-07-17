@@ -4,14 +4,18 @@ Version 0.3.3
 """
 
 import logging
-from typing import List, Dict, Any, Optional
 from datetime import datetime
+from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from pydantic import BaseModel, Field
 
+from wakedock.core.auth_middleware import (
+    require_admin_permission,
+    require_audit_access,
+    require_user_management,
+)
 from wakedock.core.rbac_service import get_rbac_service
-from wakedock.core.auth_middleware import require_admin_permission, require_user_management, require_audit_access
 from wakedock.models.user import User
 
 logger = logging.getLogger(__name__)

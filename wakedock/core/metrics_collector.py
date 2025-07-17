@@ -2,14 +2,15 @@
 Collecteur de métriques pour le monitoring temps réel des conteneurs Docker
 """
 import asyncio
-import logging
 import json
+import logging
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, AsyncGenerator, NamedTuple
-from dataclasses import dataclass, asdict
 from enum import Enum
-import aiofiles
 from pathlib import Path
+from typing import Dict, List, Optional
+
+import aiofiles
 
 from wakedock.core.docker_manager import DockerManager
 

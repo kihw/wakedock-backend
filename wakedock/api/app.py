@@ -2,23 +2,34 @@
 FastAPI application factory
 """
 
-from fastapi import FastAPI, HTTPException, Depends, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 import logging
 
-from wakedock.api.routes import services, health, proxy, system, containers, container_lifecycle, images, container_logs, compose_stacks, env_files, logs, centralized_logs, monitoring, analytics, environment, user_preferences
-from wakedock.api.routes import alerts
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from wakedock.api.auth.routes import router as auth_router
 from wakedock.api.middleware import ProxyMiddleware
-from wakedock.core.orchestrator import DockerOrchestrator
-from wakedock.core.monitoring import MonitoringService
+from wakedock.api.routes import (
+    centralized_logs,
+    compose_stacks,
+    container_lifecycle,
+    container_logs,
+    containers,
+    env_files,
+    environment,
+    health,
+    images,
+    logs,
+    proxy,
+    services,
+    system,
+    user_preferences,
+)
+from wakedock.config import get_settings
 from wakedock.core.advanced_analytics import AdvancedAnalyticsService
 from wakedock.core.alerts_service import AlertsService
-from wakedock.core.metrics_collector import MetricsCollector
-from wakedock.config import get_settings
+from wakedock.core.monitoring import MonitoringService
+from wakedock.core.orchestrator import DockerOrchestrator
 
 logger = logging.getLogger(__name__)
 

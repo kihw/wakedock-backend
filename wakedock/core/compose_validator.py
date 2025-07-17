@@ -1,12 +1,12 @@
 """
 Validation des configurations Docker Compose
 """
-import re
-import ipaddress
-from typing import Dict, List, Optional, Tuple, Any
-from pathlib import Path
-from wakedock.core.compose_parser import ComposeFile, ComposeService, ComposeValidationError
 import logging
+import re
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+from wakedock.core.compose_parser import ComposeFile, ComposeService
 
 logger = logging.getLogger(__name__)
 

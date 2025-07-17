@@ -3,16 +3,21 @@ Service de gestion des rôles et permissions (RBAC)
 Implémentation avancée pour la version 0.3.3
 """
 
-import json
 import logging
-from datetime import datetime, timedelta
-from typing import List, Dict, Optional, Any
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
 
-from wakedock.models.user import User, Role, Permission, UserRole, RolePermission, AuditLog
 from wakedock.core.database import get_database
+from wakedock.models.user import (
+    AuditLog,
+    Permission,
+    Role,
+    RolePermission,
+    User,
+    UserRole,
+)
 
 logger = logging.getLogger(__name__)
 

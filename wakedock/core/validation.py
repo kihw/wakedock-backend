@@ -1,16 +1,14 @@
 """
 Module de validation pour les containers Docker
 """
-import re
-from typing import Dict, List, Optional, Any, Tuple
-from pydantic import BaseModel, Field, validator
 import logging
+import re
+from typing import Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
 class ValidationError(Exception):
     """Exception personnalisée pour les erreurs de validation"""
-    pass
 
 class ContainerValidator:
     """Classe pour valider les configurations de containers"""

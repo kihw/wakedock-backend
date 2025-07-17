@@ -1,13 +1,14 @@
 """
 Routes API pour la gestion du cycle de vie des containers
 """
-from fastapi import APIRouter, HTTPException, Depends, status, BackgroundTasks
 from typing import Optional
-import docker
-from docker.errors import NotFound, APIError
+
+from docker.errors import APIError, NotFound
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
-from wakedock.core.docker_manager import DockerManager
+
 from wakedock.api.auth.dependencies import get_current_user
+from wakedock.core.docker_manager import DockerManager
 
 router = APIRouter(prefix="/containers", tags=["container-lifecycle"])
 

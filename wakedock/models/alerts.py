@@ -2,14 +2,18 @@
 Modèles Pydantic pour l'API d'alertes et notifications
 """
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field, validator
-from enum import Enum
 
 # Réutilise les enums du service
 from wakedock.core.alerts_service import (
-    NotificationChannel, AlertSeverity, EscalationLevel, AlertState
+    AlertSeverity,
+    AlertState,
+    EscalationLevel,
+    NotificationChannel,
 )
+
 
 class NotificationTargetRequest(BaseModel):
     """Modèle pour créer/modifier une cible de notification"""

@@ -1,21 +1,29 @@
 """
 Routes API pour le monitoring temps réel des conteneurs Docker
 """
-import asyncio
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
+from datetime import datetime
+from typing import Dict, List, Optional
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect, Query, Body
-from fastapi.responses import JSONResponse
+from fastapi import (
+    APIRouter,
+    Body,
+    HTTPException,
+    Query,
+    WebSocket,
+    WebSocketDisconnect,
+)
 from pydantic import BaseModel, Field
 
-from wakedock.core.metrics_collector import (
-    MetricsCollector, MetricType, AlertLevel, ThresholdConfig, ContainerMetrics, Alert
-)
-from wakedock.core.websocket_service import MetricsWebSocketService, StreamType
 from wakedock.core.docker_manager import get_docker_manager
+from wakedock.core.metrics_collector import (
+    Alert,
+    AlertLevel,
+    MetricsCollector,
+    MetricType,
+)
+from wakedock.core.websocket_service import MetricsWebSocketService
 
 logger = logging.getLogger(__name__)
 
@@ -503,7 +511,7 @@ async def test_alert(
     """
     try:
         collector = await get_metrics_collector()
-        ws_service = await get_websocket_service()
+        await get_websocket_service()
         
         # Trouve le nom du conteneur
         container_name = collector.monitored_containers.get(container_id, container_id)

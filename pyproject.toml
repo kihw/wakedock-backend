@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wakedock"
-version = "0.5.3"
+version = "0.6.4"
 description = "A comprehensive Wake-on-LAN and reverse proxy management system"
 readme = "README.md"
 license = {file = "LICENSE"}

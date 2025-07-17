@@ -2,14 +2,14 @@
 
 import os
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Dict, Any
+from typing import Optional
 
 import jwt
 from jwt.exceptions import InvalidTokenError
-from passlib.context import CryptContext
 
 from wakedock.config import get_settings
 from wakedock.database.models import UserRole
+
 from .models import TokenData
 
 

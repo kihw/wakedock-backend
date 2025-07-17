@@ -3,27 +3,27 @@ Service d'audit de sécurité avancé pour WakeDock
 Traçabilité complète, chiffrement des logs et détection d'anomalies
 """
 import asyncio
-import json
-import hashlib
-import hmac
-import gzip
 import base64
+import gzip
+import hashlib
+import json
+import logging
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Set, Tuple
 from enum import Enum
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import aiofiles
+import aiofiles.os
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-import aiofiles
-import aiofiles.os
 from pydantic import BaseModel
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, or_, func
-from wakedock.core.database import get_async_session
-from wakedock.models.audit import AuditLog, SecurityEvent, AnomalyDetection
+from sqlalchemy import and_, func, select
+
 from wakedock.core.config import get_settings
-import logging
+from wakedock.core.database import get_async_session
+from wakedock.models.audit import AnomalyDetection, AuditLog, SecurityEvent
 
 logger = logging.getLogger(__name__)
 

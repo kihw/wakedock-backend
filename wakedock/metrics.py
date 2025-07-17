@@ -5,27 +5,30 @@ Provides Prometheus metrics collection for monitoring system health,
 performance, and business metrics.
 """
 
+import logging
+import threading
 import time
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Union
+from datetime import datetime
+from http.server import HTTPServer
 from threading import Lock
-import psutil
+from typing import Any, Optional
+
 import docker
+import psutil
 from prometheus_client import (
-    Counter, Histogram, Gauge, Info, Summary,
-    CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST,
-    multiprocess, values
+    CollectorRegistry,
+    CONTENT_TYPE_LATEST,
+    Counter,
+    Gauge,
+    generate_latest,
+    Histogram,
+    Info,
 )
 from prometheus_client.core import CollectorRegistry
 from prometheus_client.exposition import MetricsHandler
-from http.server import HTTPServer
-import threading
-import logging
 
-from wakedock.core.orchestrator import DockerOrchestrator
 from wakedock.database import get_session
 from wakedock.database.models import Service, User
-
 
 logger = logging.getLogger(__name__)
 
@@ -570,7 +573,7 @@ class MetricsMiddleware:
             
             return response
             
-        except Exception as e:
+        except Exception:
             duration = time.time() - start_time
             
             # Record error
@@ -655,7 +658,7 @@ def timed(operation: str, component: str = 'general'):
                 
                 return result
                 
-            except Exception as e:
+            except Exception:
                 duration = time.time() - start_time
                 
                 if component == 'database':

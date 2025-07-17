@@ -1,16 +1,16 @@
 """
 API routes pour l'optimisation et performance des logs - Version 0.2.5
 """
-import asyncio
 import logging
-from datetime import datetime, timedelta
-from typing import Optional, List, Dict, Any
-from fastapi import APIRouter, HTTPException, Query, BackgroundTasks, Depends
-from pydantic import BaseModel, Field
 import time
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from wakedock.core.log_optimization_service import LogOptimizationService, CompressionStats
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from pydantic import BaseModel, Field
+
 from wakedock.core.dependencies import get_log_optimization_service
+from wakedock.core.log_optimization_service import LogOptimizationService
 
 logger = logging.getLogger(__name__)
 

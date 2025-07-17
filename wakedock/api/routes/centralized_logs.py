@@ -2,19 +2,20 @@
 API routes pour le système de logs centralisé avec recherche avancée
 """
 import asyncio
+import csv
+import io
+import json
 import logging
 from datetime import datetime, timedelta
-from typing import Optional, List, Dict, Any
-from fastapi import APIRouter, HTTPException, Query, BackgroundTasks, Depends
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
-import json
-import io
-import csv
 
-from wakedock.core.log_collector import LogCollector, LogLevel, LogEntry
-from wakedock.core.log_search_service import LogSearchService
 from wakedock.core.docker_manager import DockerManager
+from wakedock.core.log_collector import LogCollector, LogLevel
+from wakedock.core.log_search_service import LogSearchService
 
 logger = logging.getLogger(__name__)
 

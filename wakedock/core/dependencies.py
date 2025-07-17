@@ -1,21 +1,27 @@
 """
 Dépendances FastAPI pour l'application WakeDock
 """
-from functools import lru_cache
-from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
-from wakedock.core.docker_manager import DockerManager
-from wakedock.core.metrics_collector import MetricsCollector
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from wakedock.core.alerts_service import AlertsService
-from wakedock.core.log_optimization_service import LogOptimizationService
-from wakedock.core.auth_service import get_auth_service, AuthService
-from wakedock.core.user_profile_service import get_user_profile_service, UserProfileService
-from wakedock.core.rbac_service import get_rbac_service, RBACService
-from wakedock.core.security_audit_service import get_security_audit_service, SecurityAuditService
-from wakedock.core.cicd_service import get_cicd_service, CICDService
+from wakedock.core.auth_service import AuthService, get_auth_service
 from wakedock.core.auto_deployment_service import AutoDeploymentService
-from wakedock.core.swarm_service import SwarmService
+from wakedock.core.cicd_service import CICDService, get_cicd_service
+from wakedock.core.docker_manager import DockerManager
 from wakedock.core.environment_service import EnvironmentService
+from wakedock.core.log_optimization_service import LogOptimizationService
+from wakedock.core.metrics_collector import MetricsCollector
+from wakedock.core.rbac_service import get_rbac_service, RBACService
+from wakedock.core.security_audit_service import (
+    get_security_audit_service,
+    SecurityAuditService,
+)
+from wakedock.core.swarm_service import SwarmService
+from wakedock.core.user_profile_service import (
+    get_user_profile_service,
+    UserProfileService,
+)
 from wakedock.database.database import get_async_session
 
 # Instances globales
@@ -209,7 +215,7 @@ async def startup_services():
     auth_service.cleanup_expired_sessions()
     
     # Initialise le service de profils utilisateur
-    profile_service = get_user_profile_service_dependency()
+    get_user_profile_service_dependency()
     # Le service de profils n'a pas besoin de start() car il est stateless
     
     # Initialise le service RBAC
@@ -287,4 +293,3 @@ async def shutdown_services():
     # Ferme le manager Docker
     if _docker_manager:
         _docker_manager.close()
-        _docker_manager = None

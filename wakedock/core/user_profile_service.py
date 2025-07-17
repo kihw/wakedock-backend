@@ -4,13 +4,13 @@ Extension du système d'authentification pour la personnalisation
 """
 
 from datetime import datetime, timedelta
-from typing import Optional, Dict, Any, List
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from typing import Any, Dict, List, Optional
 
-from wakedock.models.user import User, AuditLog
+from sqlalchemy import desc
+from sqlalchemy.orm import Session
+
 from wakedock.logging import get_logger
-from wakedock.database.database import get_db
+from wakedock.models.user import AuditLog, User
 
 logger = get_logger(__name__)
 

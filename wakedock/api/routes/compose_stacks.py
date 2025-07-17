@@ -1,17 +1,18 @@
 """
 Routes API pour la gestion des stacks Docker Compose
 """
-from fastapi import APIRouter, HTTPException, Depends, status, UploadFile, File, Form
-from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field
 import logging
+from typing import Any, Dict, List, Optional
 
+from fastapi import APIRouter, Depends, File, Form, HTTPException, status, UploadFile
+from pydantic import BaseModel, Field
+
+from wakedock.api.auth.dependencies import get_current_user
+from wakedock.core.compose_deployment import ComposeDeploymentManager
 from wakedock.core.compose_parser import ComposeParser, ComposeValidationError
 from wakedock.core.compose_validator import ComposeValidator
-from wakedock.core.compose_deployment import ComposeDeploymentManager, DeploymentResult, DeploymentStatus
-from wakedock.core.env_manager import EnvManager
 from wakedock.core.dependency_manager import DependencyManager
-from wakedock.api.auth.dependencies import get_current_user
+from wakedock.core.env_manager import EnvManager
 
 logger = logging.getLogger(__name__)
 

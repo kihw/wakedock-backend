@@ -3,17 +3,16 @@ Service de personnalisation des tableaux de bord - WakeDock
 Gestion des layouts, widgets et configurations personnalisées
 """
 
-import json
 import logging
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timedelta
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, delete
 from sqlalchemy.orm import selectinload
 
-from wakedock.models.user import User
-from wakedock.models.dashboard import DashboardLayout, DashboardWidget, DashboardTemplate
 from wakedock.core.base_service import BaseService
+from wakedock.models.dashboard import DashboardLayout, DashboardWidget
 
 logger = logging.getLogger(__name__)
 

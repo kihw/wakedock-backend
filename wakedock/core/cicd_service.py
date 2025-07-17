@@ -3,24 +3,27 @@ Service d'intégration CI/CD avec GitHub Actions pour WakeDock
 Gestion des webhooks, builds automatisés et notifications de déploiement
 """
 import asyncio
-import json
-import hmac
 import hashlib
-import base64
+import hmac
+import json
+import logging
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Union
 from enum import Enum
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import aiohttp
-import aiofiles
-from pydantic import BaseModel, Field, validator
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, or_, func, desc
-from wakedock.core.database import get_async_session
-from wakedock.models.cicd import GitHubIntegration, CIBuild, Deployment, Pipeline, Secret
+from pydantic import BaseModel
+from sqlalchemy import and_, desc, func, select
+
 from wakedock.core.config import get_settings
-from wakedock.core.security_audit_service import get_security_audit_service, SecurityEventData, SecurityEventType
-import logging
+from wakedock.core.database import get_async_session
+from wakedock.core.security_audit_service import (
+    get_security_audit_service,
+    SecurityEventData,
+    SecurityEventType,
+)
+from wakedock.models.cicd import CIBuild, GitHubIntegration
 
 logger = logging.getLogger(__name__)
 
@@ -638,7 +641,7 @@ class CICDService:
             ("Deploy", 10)
         ]
         
-        total_duration = sum(step[1] for step in steps)
+        sum(step[1] for step in steps)
         
         for step_name, duration in steps:
             await asyncio.sleep(duration / 10)  # Accélérer pour la démo

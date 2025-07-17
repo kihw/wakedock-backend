@@ -2,12 +2,12 @@
 Service management endpoints
 """
 
-from fastapi import APIRouter, HTTPException, Depends, status, Request
-from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from wakedock.config import ServiceSettings, get_settings
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from pydantic import BaseModel
+
 from wakedock.core.orchestrator import DockerOrchestrator
 
 router = APIRouter()

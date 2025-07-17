@@ -1,12 +1,12 @@
 """Database configuration and session management for WakeDock."""
 
 import os
-from typing import Generator, Optional
 from contextlib import contextmanager
+from typing import Generator, Optional
 
 from sqlalchemy import create_engine, Engine
-from sqlalchemy.orm import sessionmaker, Session, declarative_base
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import declarative_base, Session, sessionmaker
 
 from ..config import get_settings
 

@@ -1,12 +1,13 @@
 """
 Gestionnaire des dépendances entre services Docker Compose
 """
-from typing import Dict, List, Set, Optional, Tuple, Any
+import logging
+from collections import defaultdict, deque
 from dataclasses import dataclass
 from enum import Enum
-from collections import defaultdict, deque
+from typing import Any, Dict, List, Optional, Set, Tuple
+
 from wakedock.core.compose_parser import ComposeFile, ComposeService
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -171,7 +172,6 @@ class DependencyGraph:
 
 class DependencyError(Exception):
     """Exception pour les erreurs de dépendances"""
-    pass
 
 class DependencyManager:
     """Gestionnaire des dépendances de services"""

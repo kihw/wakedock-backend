@@ -2,18 +2,20 @@
 API Routes pour la gestion des environnements
 """
 import logging
-from typing import List, Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
-from fastapi.responses import StreamingResponse
-from pydantic import BaseModel, Field
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from wakedock.core.environment_service import (
-    EnvironmentService, EnvironmentInfo, PromotionInfo,
-    EnvironmentType, EnvironmentStatus, PromotionType
-)
-from wakedock.core.dependencies import get_environment_service
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel, Field
+
 from wakedock.core.auth_middleware import require_authenticated_user
+from wakedock.core.dependencies import get_environment_service
+from wakedock.core.environment_service import (
+    EnvironmentService,
+    EnvironmentStatus,
+    EnvironmentType,
+    PromotionType,
+)
 from wakedock.models.user import User
 
 logger = logging.getLogger(__name__)

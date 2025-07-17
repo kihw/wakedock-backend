@@ -2,25 +2,26 @@
 Service d'alertes et notifications automatiques avancé pour WakeDock
 """
 import asyncio
-import logging
 import json
-import smtplib
-import aiohttp
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Callable, Union
-from dataclasses import dataclass, asdict
-from pathlib import Path
-from enum import Enum
-import aiofiles
-from email.mime.text import MimeText
-from email.mime.multipart import MimeMultipart
-from email.utils import formataddr
-import ssl
+import logging
 import re
+import smtplib
+import ssl
+from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta
+from email.mime.multipart import MimeMultipart
+from email.mime.text import MimeText
+from email.utils import formataddr
+from enum import Enum
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import aiofiles
+import aiohttp
 from jinja2 import Template
 
-from wakedock.core.metrics_collector import Alert, AlertLevel, MetricsCollector
 from wakedock.config import get_settings
+from wakedock.core.metrics_collector import MetricsCollector
 
 logger = logging.getLogger(__name__)
 

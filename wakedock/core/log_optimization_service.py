@@ -3,22 +3,21 @@ Service d'optimisation et indexation avancée pour les logs centralisés
 Version 0.2.5 - Performance et stockage optimisés
 """
 import asyncio
-import logging
-import lz4.frame
 import gzip
-import sqlite3
-import json
 import hashlib
+import json
+import logging
+import time
+from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Set, Tuple, Any
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Set, Tuple
+
 import aiofiles
 import aiosqlite
-from dataclasses import dataclass, asdict
-from collections import defaultdict
-import time
+import lz4.frame
 
-from wakedock.core.log_collector import LogEntry, LogLevel
+from wakedock.core.log_collector import LogEntry
 
 logger = logging.getLogger(__name__)
 
@@ -298,7 +297,7 @@ class LogOptimizationService:
     def _extract_search_terms(self, message: str) -> Set[str]:
         """Extrait les termes de recherche d'un message"""
         import re
-        
+
         # Nettoyer et normaliser le message
         cleaned = re.sub(r'[^\w\s\-\.]', ' ', message.lower())
         

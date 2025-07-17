@@ -1,9 +1,7 @@
 """
 Dépendances pour le système d'alertes
 """
-from functools import lru_cache
 from wakedock.core.alerts_service import AlertsService
-from wakedock.core.metrics_collector import MetricsCollector
 
 # Instance globale du service d'alertes
 _alerts_service: AlertsService = None

@@ -2,11 +2,12 @@
 Gestionnaire Docker pour WakeDock
 Gère les interactions avec l'API Docker
 """
-import docker
-from docker.errors import NotFound, APIError, ImageNotFound
-from typing import List, Dict, Optional, Any
 import logging
-from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+import docker
+from docker.errors import ImageNotFound, NotFound
+
 from wakedock.core.validation import validate_container_config, ValidationError
 
 logger = logging.getLogger(__name__)

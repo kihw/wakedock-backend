@@ -355,7 +355,7 @@ async def get_storage_usage(
     """Analyse l'utilisation du stockage"""
     try:
         from pathlib import Path
-        
+
         # Calculer l'espace utilisé
         total_size = 0
         file_count = 0

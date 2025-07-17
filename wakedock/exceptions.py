@@ -1,6 +1,6 @@
 """Custom exceptions for WakeDock."""
 
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 
 class WakeDockException(Exception):
@@ -14,7 +14,6 @@ class WakeDockException(Exception):
 
 class ServiceException(WakeDockException):
     """Exception related to service operations."""
-    pass
 
 
 class ServiceNotFoundError(ServiceException):
@@ -61,7 +60,6 @@ class ServiceStopError(ServiceException):
 
 class DockerException(WakeDockException):
     """Exception related to Docker operations."""
-    pass
 
 
 class DockerDaemonError(DockerException):
@@ -93,7 +91,6 @@ class DockerContainerError(DockerException):
 
 class DatabaseException(WakeDockException):
     """Exception related to database operations."""
-    pass
 
 
 class DatabaseConnectionError(DatabaseException):
@@ -112,7 +109,6 @@ class DatabaseMigrationError(DatabaseException):
 
 class AuthenticationException(WakeDockException):
     """Exception related to authentication."""
-    pass
 
 
 class InvalidCredentialsError(AuthenticationException):
@@ -141,7 +137,6 @@ class InsufficientPermissionsError(AuthenticationException):
 
 class ConfigurationException(WakeDockException):
     """Exception related to configuration."""
-    pass
 
 
 class InvalidConfigurationError(ConfigurationException):
@@ -166,7 +161,6 @@ class MissingConfigurationError(ConfigurationException):
 
 class NetworkException(WakeDockException):
     """Exception related to network operations."""
-    pass
 
 
 class PortUnavailableError(NetworkException):
@@ -185,7 +179,6 @@ class DomainUnavailableError(NetworkException):
 
 class CaddyException(WakeDockException):
     """Exception related to Caddy operations."""
-    pass
 
 
 class CaddyConfigurationError(CaddyException):
@@ -204,7 +197,6 @@ class CaddyReloadError(CaddyException):
 
 class MonitoringException(WakeDockException):
     """Exception related to monitoring operations."""
-    pass
 
 
 class HealthCheckError(MonitoringException):
@@ -226,7 +218,6 @@ class MetricsCollectionError(MonitoringException):
 
 class ValidationException(WakeDockException):
     """Exception related to validation."""
-    pass
 
 
 class InvalidInputError(ValidationException):

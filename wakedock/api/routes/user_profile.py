@@ -3,16 +3,20 @@ Routes API pour la gestion des profils utilisateur et préférences
 Extension des routes d'authentification pour la version 0.3.2
 """
 
-from typing import Optional, List, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, status, Request, Query
-from sqlalchemy.orm import Session
-from pydantic import BaseModel, EmailStr, validator
+from typing import List, Optional
 
-from wakedock.core.user_profile_service import get_user_profile_service, UserProfileService
-from wakedock.database.database import get_db
-from wakedock.models.user import User
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from pydantic import BaseModel, EmailStr, validator
+from sqlalchemy.orm import Session
+
 from wakedock.api.routes.auth import get_current_user, log_audit_action
+from wakedock.core.user_profile_service import (
+    get_user_profile_service,
+    UserProfileService,
+)
+from wakedock.database.database import get_db
 from wakedock.logging import get_logger
+from wakedock.models.user import User
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/profile", tags=["user-profile"])

@@ -1,13 +1,14 @@
 """
 Routes API pour la gestion des images Docker
 """
-from fastapi import APIRouter, HTTPException, Depends, status
-from typing import List, Optional, Dict, Any
-import docker
-from docker.errors import NotFound, APIError, ImageNotFound
+from typing import List, Optional
+
+from docker.errors import APIError, ImageNotFound
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
-from wakedock.core.docker_manager import DockerManager
+
 from wakedock.api.auth.dependencies import get_current_user
+from wakedock.core.docker_manager import DockerManager
 
 router = APIRouter(prefix="/images", tags=["images"])
 

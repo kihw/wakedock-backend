@@ -1,15 +1,16 @@
 """
 Routes API pour la gestion des logs
 """
-from fastapi import APIRouter, HTTPException, Depends, status, Query
-from fastapi.responses import StreamingResponse
-from typing import List, Optional, Dict, Any, AsyncGenerator
-from pydantic import BaseModel, Field
-from datetime import datetime, timedelta
-import logging
 import asyncio
 import json
+import logging
+from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any, AsyncGenerator, Dict, List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel, Field
 
 from wakedock.api.auth.dependencies import get_current_user
 from wakedock.core.docker_manager import DockerManager

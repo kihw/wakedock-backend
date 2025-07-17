@@ -3,31 +3,26 @@ Service de gestion Docker Swarm pour WakeDock
 Implémente l'orchestration de clusters et la gestion de services distribués
 """
 import asyncio
-import json
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 import docker
-from docker.models.services import Service
-from docker.models.nodes import Node
-from docker.models.networks import Network
 from docker.errors import APIError, NotFound
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, or_, func
-from sqlalchemy.orm import selectinload
 
-from wakedock.models.swarm import (
-    SwarmCluster, SwarmNode, SwarmService, SwarmNetwork,
-    SwarmServiceReplica, SwarmLoadBalancer, SwarmSecret,
-    SwarmConfig, SwarmStack, ServiceHealthCheck
-)
-from wakedock.core.security_audit_service import SecurityAuditService
 from wakedock.core.rbac_service import RBACService
+from wakedock.core.security_audit_service import SecurityAuditService
 from wakedock.models.audit import AuditAction
-
+from wakedock.models.swarm import (
+    ServiceHealthCheck,
+    SwarmCluster,
+    SwarmNode,
+    SwarmService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -991,4 +986,3 @@ class SwarmService:
 def get_swarm_service() -> SwarmService:
     """Factory function pour créer le service Swarm"""
     # Cette fonction sera utilisée dans dependencies.py
-    pass

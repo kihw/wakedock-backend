@@ -34,28 +34,27 @@ import logging
 import os
 import re
 import shutil
-import tempfile
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple, Union
+from typing import Any, Dict, List, Optional
 
 import aiofiles
 import docker
 import git
-import yaml
 from cryptography.fernet import Fernet
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from sqlalchemy import select, update, delete, func
 
-from wakedock.models.deployment import (
-    AutoDeployment, DeploymentSecret, DeploymentHistory, 
-    DeploymentConfig, ContainerHealth, DeploymentMetrics
-)
-from wakedock.models.cicd import GitHubIntegration
-from wakedock.core.security_audit_service import SecurityAuditService
 from wakedock.core.rbac_service import RBACService
+from wakedock.core.security_audit_service import SecurityAuditService
+from wakedock.models.deployment import (
+    AutoDeployment,
+    DeploymentHistory,
+    DeploymentMetrics,
+    DeploymentSecret,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -532,7 +531,7 @@ class AutoDeploymentService:
         # Analyser image
         try:
             image = self.docker_client.images.get(image_tag)
-            image_info = image.attrs
+            image.attrs
             
             # Simulation résultats scan
             vulnerabilities = []

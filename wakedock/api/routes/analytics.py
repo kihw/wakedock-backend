@@ -1,24 +1,21 @@
 """
 Routes API pour les analytics avancés et métriques de performance
 """
-import asyncio
 import logging
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
-from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
-from pydantic import BaseModel, Field
 from enum import Enum
+from typing import Dict, List, Optional
+
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
+from pydantic import BaseModel, Field
 
 from wakedock.core.advanced_analytics import (
-    AdvancedAnalyticsService, 
-    PerformanceTrend, 
-    ResourceOptimization, 
-    PerformanceReport,
+    AdvancedAnalyticsService,
+    PerformanceTrend,
+    ResourceOptimization,
     TrendDirection,
-    PredictionConfidence
 )
 from wakedock.core.metrics_collector import MetricsCollector
-from wakedock.core.docker_manager import DockerManager
 
 logger = logging.getLogger(__name__)
 

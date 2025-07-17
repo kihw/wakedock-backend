@@ -3,14 +3,15 @@ API Routes pour la personnalisation des tableaux de bord - WakeDock
 Endpoints pour la gestion des layouts, widgets et templates
 """
 
-from typing import List, Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
 
-from wakedock.core.database import get_db_session
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel, Field
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from wakedock.core.auth import get_current_user
 from wakedock.core.dashboard_service import DashboardCustomizationService
+from wakedock.core.database import get_db_session
 from wakedock.models.user import User
 
 # Création du router
