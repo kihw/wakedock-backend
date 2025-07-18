@@ -1,53 +1,423 @@
 """
-Routes d'authentification pour WakeDock
+Authentication routes for FastAPI - MVC Architecture
 """
 
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from fastapi.security import HTTPAuthorizationCredentials
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
+from wakedock.controllers.auth_controller import AuthController
+from wakedock.repositories.auth_repository import AuthRepository
+from wakedock.validators.auth_validator import AuthValidator
+from wakedock.services.auth_service import AuthService
+from wakedock.views.auth_view import AuthView
+from wakedock.serializers.auth_serializers import (
+    LoginSerializer,
+    RegisterSerializer,
+    ProfileUpdateSerializer,
+    PasswordChangeSerializer,
+    PasswordResetRequestSerializer,
+    PasswordResetSerializer,
+    TokenRefreshSerializer,
+    UserSearchSerializer,
+    RoleAssignmentSerializer,
+    BulkUserActionSerializer
+)
+from wakedock.core.database import get_db_session
+from wakedock.models.auth import User
 
-from wakedock.core.auth_service import AuthService, get_auth_service
-from wakedock.database.database import get_db
-from wakedock.logging import get_logger
-from wakedock.models.user import AuditLog, User
+import logging
+logger = logging.getLogger(__name__)
 
-logger = get_logger(__name__)
+# FastAPI router
+router = APIRouter(prefix="/api/auth", tags=["Authentication"])
+
+# Security scheme
+security = HTTPBearer()
+
+# Dependencies
+async def get_auth_dependencies(db: AsyncSession = Depends(get_db_session)):
+    """Get authentication dependencies"""
+    auth_repository = AuthRepository(db)
+    auth_validator = AuthValidator()
+    auth_service = AuthService()
+    auth_controller = AuthController(auth_repository, auth_validator, auth_service)
+    auth_view = AuthView()
+    
+    return auth_controller, auth_view
+
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: AsyncSession = Depends(get_db_session)
+):
+    """Get current authenticated user"""
+    try:
+        auth_repository = AuthRepository(db)
+        payload = await auth_repository.verify_token(credentials.credentials)
+        
+        if not payload:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials"
+            )
+        
+        user = await auth_repository.get_by_id(payload['user_id'])
+        if not user or not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found or inactive"
+            )
+        
+        return user
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting current user: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication failed"
+        )
 
 
-router = APIRouter(prefix="/auth", tags=["authentication"])
+@router.post("/login", summary="User login", description="Authenticate user and return JWT token")
+async def login(
+    request: Request,
+    login_data: LoginSerializer,
+    deps = Depends(get_auth_dependencies)
+):
+    """User login endpoint"""
+    try:
+        auth_controller, auth_view = deps
+        
+        # Authenticate user
+        result = await auth_controller.authenticate(
+            username=login_data.username,
+            password=login_data.password
+        )
+        
+        # Format response
+        response = await auth_view.login_response(
+            user=result['user'],
+            token=result['token'],
+            expires_at=result['expires_at']
+        )
+        
+        # Log successful login
+        logger.info(f"User '{login_data.username}' logged in successfully")
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Login error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Login failed"
+        )
 
 
-# Modèles Pydantic pour les requêtes/réponses
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-    remember_me: bool = False
+@router.post("/register", summary="User registration", description="Register new user account")
+async def register(
+    request: Request,
+    register_data: RegisterSerializer,
+    deps = Depends(get_auth_dependencies)
+):
+    """User registration endpoint"""
+    try:
+        auth_controller, auth_view = deps
+        
+        # Register user
+        result = await auth_controller.register(
+            username=register_data.username,
+            email=register_data.email,
+            password=register_data.password,
+            first_name=register_data.first_name,
+            last_name=register_data.last_name,
+            roles=register_data.roles
+        )
+        
+        # Format response
+        response = await auth_view.register_response(result['user'])
+        
+        # Log successful registration
+        logger.info(f"User '{register_data.username}' registered successfully")
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Registration error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Registration failed"
+        )
 
 
-class LoginResponse(BaseModel):
-    access_token: str
-    refresh_token: str
-    token_type: str
-    expires_in: int
-    user: dict
+@router.post("/logout", summary="User logout", description="Logout user and revoke token")
+async def logout(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    deps = Depends(get_auth_dependencies)
+):
+    """User logout endpoint"""
+    try:
+        auth_controller, auth_view = deps
+        
+        # Logout user
+        await auth_controller.logout(credentials.credentials)
+        
+        # Format response
+        response = await auth_view.logout_response()
+        
+        logger.info("User logged out successfully")
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Logout error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Logout failed"
+        )
 
 
-class RefreshTokenRequest(BaseModel):
-    refresh_token: str
+@router.post("/refresh", summary="Refresh token", description="Refresh JWT authentication token")
+async def refresh_token(
+    request: Request,
+    refresh_data: TokenRefreshSerializer,
+    deps = Depends(get_auth_dependencies)
+):
+    """Token refresh endpoint"""
+    try:
+        auth_controller, auth_view = deps
+        
+        # Refresh token
+        result = await auth_controller.refresh_token(refresh_data.token)
+        
+        # Format response
+        response = await auth_view.token_refresh_response(
+            token=result['token'],
+            expires_at=result['expires_at']
+        )
+        
+        logger.info("Token refreshed successfully")
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Token refresh error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Token refresh failed"
+        )
 
 
-class RefreshTokenResponse(BaseModel):
-    access_token: str
-    token_type: str
-    expires_in: int
+@router.get("/me", summary="Get current user", description="Get current user profile information")
+async def get_current_user_profile(
+    request: Request,
+    current_user = Depends(get_current_user),
+    deps = Depends(get_auth_dependencies)
+):
+    """Get current user profile endpoint"""
+    try:
+        auth_controller, auth_view = deps
+        
+        # Get current user info
+        user_info = await auth_controller.get_current_user(
+            request.headers.get('Authorization', '').replace('Bearer ', '')
+        )
+        
+        # Format response
+        response = await auth_view.user_profile_response(current_user)
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Get current user error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to get user profile"
+        )
 
 
-class LogoutRequest(BaseModel):
-    refresh_token: str
+@router.put("/me", summary="Update profile", description="Update current user profile")
+async def update_profile(
+    request: Request,
+    profile_data: ProfileUpdateSerializer,
+    current_user = Depends(get_current_user),
+    deps = Depends(get_auth_dependencies)
+):
+    """Update user profile endpoint"""
+    try:
+        auth_controller, auth_view = deps
+        
+        # Update profile
+        result = await auth_controller.update_profile(
+            user_id=current_user.id,
+            first_name=profile_data.first_name,
+            last_name=profile_data.last_name,
+            email=profile_data.email
+        )
+        
+        # Format response
+        response = await auth_view.profile_update_response(result['user'])
+        
+        logger.info(f"Profile updated for user '{current_user.username}'")
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Profile update error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Profile update failed"
+        )
+
+
+@router.post("/change-password", summary="Change password", description="Change user password")
+async def change_password(
+    request: Request,
+    password_data: PasswordChangeSerializer,
+    current_user = Depends(get_current_user),
+    deps = Depends(get_auth_dependencies)
+):
+    """Change password endpoint"""
+    try:
+        auth_controller, auth_view = deps
+        
+        # Change password
+        result = await auth_controller.change_password(
+            user_id=current_user.id,
+            current_password=password_data.current_password,
+            new_password=password_data.new_password
+        )
+        
+        # Format response
+        response = await auth_view.password_change_response()
+        
+        logger.info(f"Password changed for user '{current_user.username}'")
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Password change error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Password change failed"
+        )
+
+
+@router.get("/users", summary="Get users", description="Get users list (admin only)")
+async def get_users(
+    request: Request,
+    search: UserSearchSerializer = Depends(),
+    current_user = Depends(get_current_user),
+    deps = Depends(get_auth_dependencies)
+):
+    """Get users endpoint (admin only)"""
+    try:
+        # Check admin permission
+        if not current_user.has_permission('users:read'):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions"
+            )
+        
+        auth_controller, auth_view = deps
+        
+        # Get users
+        result = await auth_controller.get_users(
+            limit=search.limit,
+            offset=search.offset
+        )
+        
+        # Format response
+        response = await auth_view.users_list_response(
+            users=result['users'],
+            total_count=result['total_count'],
+            limit=result['limit'],
+            offset=result['offset']
+        )
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Get users error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to get users"
+        )
+
+
+@router.get("/stats", summary="Get auth stats", description="Get authentication statistics (admin only)")
+async def get_auth_stats(
+    request: Request,
+    current_user = Depends(get_current_user),
+    deps = Depends(get_auth_dependencies)
+):
+    """Get authentication statistics endpoint (admin only)"""
+    try:
+        # Check admin permission
+        if not current_user.has_permission('users:read'):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions"
+            )
+        
+        auth_controller, auth_view = deps
+        
+        # Get stats
+        stats = await auth_controller.get_auth_stats()
+        
+        # Format response
+        response = await auth_view.auth_stats_response(stats)
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Get auth stats error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to get authentication statistics"
+        )
+
+
+# Health check endpoint
+@router.get("/health", summary="Auth health check", description="Check authentication service health")
+async def health_check(request: Request):
+    """Authentication service health check"""
+    try:
+        return {
+            "status": "healthy",
+            "service": "authentication",
+            "timestamp": "2023-01-01T00:00:00Z"
+        }
+        
+    except Exception as e:
+        logger.error(f"Auth health check error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Authentication service unhealthy"
+        )
 
 
 class UserProfileResponse(BaseModel):
