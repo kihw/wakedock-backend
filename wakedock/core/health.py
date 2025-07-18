@@ -3,17 +3,15 @@
 import asyncio
 import logging
 import time
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Callable
-from enum import Enum
 from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
 
-import httpx
 import docker
-from sqlalchemy.orm import Session
+import httpx
 
 from wakedock.config import get_settings
-from wakedock.database.database import get_db_session
 from wakedock.database.models import Service, ServiceStatus
 
 logger = logging.getLogger(__name__)
@@ -292,7 +290,7 @@ class HealthMonitor:
         """Check system resource usage."""
         try:
             import psutil
-            
+
             # Get system metrics
             cpu_percent = psutil.cpu_percent(interval=1)
             memory = psutil.virtual_memory()

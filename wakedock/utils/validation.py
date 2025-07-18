@@ -1,9 +1,8 @@
 """Validation utilities for WakeDock."""
 
 import re
-import socket
-from typing import Optional, List, Dict, Any
-from urllib.parse import urlparse
+from typing import Any, Dict, List
+
 import validators
 
 

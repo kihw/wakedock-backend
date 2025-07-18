@@ -1,0 +1,60 @@
+# WakeDock v1.0.0 - Updated Dependencies
+
+# Existing dependencies from requirements.txt
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+sqlalchemy==2.0.23
+alembic==1.13.1
+psycopg2-binary==2.9.9
+python-multipart==0.0.6
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0
+aiofiles==23.2.1
+httpx==0.25.2
+jinja2==3.1.2
+starlette==0.27.0
+
+# New dependencies for v1.0.0 features
+docker==7.0.0            # Docker SDK for Python
+PyYAML==6.0.1            # YAML parsing for Docker Compose
+aiohttp==3.9.1           # Async HTTP client for GitHub API
+gitpython==3.1.40        # Git operations for repository cloning
+psutil==5.9.6            # System monitoring and metrics
+websockets==12.0         # WebSocket support for real-time monitoring
+redis==5.0.1             # Redis client for caching
+celery==5.3.4            # Background task processing
+flower==2.0.1            # Celery monitoring
+prometheus-client==0.19.0 # Prometheus metrics
+jsonschema==4.20.0       # JSON schema validation
+cryptography==41.0.8     # Enhanced encryption
+networkx==3.2.1          # Network analysis and management
+schedule==1.2.0          # Task scheduling
+click==8.1.7             # CLI utilities
+rich==13.7.0             # Rich text and progress bars
+typer==0.9.0             # CLI framework
+python-semantic-version==2.10.0  # Semantic versioning
+deepdiff==6.7.1          # Deep difference and search
+watchdog==3.0.0          # File system monitoring
+pytz==2023.3             # Timezone support
+cachetools==5.3.2        # Caching utilities
+tenacity==8.2.3          # Retry utilities
+prometheus-fastapi-instrumentator==6.1.0  # FastAPI metrics
+structlog==23.2.0        # Structured logging
+
+# Development dependencies
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+black==23.11.0
+flake8==6.1.0
+mypy==1.7.1
+pre-commit==3.5.0
+bandit==1.7.5            # Security linting
+safety==2.3.5            # Security vulnerability scanning
+coverage==7.3.2          # Code coverage
+pytest-mock==3.12.0     # Mocking for tests
+httpx-mock==0.5.0       # HTTP mocking
+factory-boy==3.3.0      # Test data generation
+freezegun==1.2.2        # Time mocking for tests

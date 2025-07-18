@@ -3,15 +3,13 @@
 import click
 from alembic import command
 from alembic.config import Config
-from pathlib import Path
 
-from wakedock.database.database import init_database, db_manager
+from wakedock.database.database import db_manager, init_database
 
 
 @click.group()
 def db():
     """Database management commands."""
-    pass
 
 
 @db.command()

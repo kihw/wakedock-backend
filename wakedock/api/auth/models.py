@@ -1,7 +1,8 @@
 """Pydantic models for authentication and user management."""
 
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
 from pydantic import BaseModel, EmailStr, Field, validator
 
 from wakedock.database.models import UserRole

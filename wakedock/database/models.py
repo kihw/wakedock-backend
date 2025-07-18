@@ -1,12 +1,18 @@
 """SQLAlchemy models for WakeDock."""
 
-from datetime import datetime
-from typing import Optional, List
 from enum import Enum as PyEnum
 
 from sqlalchemy import (
-    Column, Integer, String, Text, Boolean, DateTime, 
-    ForeignKey, Enum, JSON, UniqueConstraint
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    JSON,
+    String,
+    Text,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func

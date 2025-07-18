@@ -2,7 +2,7 @@
 Loading page templates
 """
 
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 def get_loading_page(service: Dict[str, Any]) -> str:

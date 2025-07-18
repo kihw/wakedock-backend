@@ -4,24 +4,21 @@ WakeDock Security Validation Module
 Provides comprehensive input validation, sanitization, and security checks.
 """
 
-import re
-import ipaddress
-import validators
-from typing import Any, Dict, List, Optional, Union, Tuple
-from urllib.parse import urlparse
-from pathlib import Path
 import hashlib
+import ipaddress
+import re
 import secrets
-from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+from urllib.parse import urlparse
 
-from pydantic import BaseModel, validator, Field
-from pydantic.validators import str_validator
+import validators
+from pydantic import BaseModel, Field, validator
 from pydantic.errors import PydanticValueError
 
 
 class ValidationError(PydanticValueError):
     """Custom validation error."""
-    pass
 
 
 class SecurityConfig:

@@ -1,12 +1,14 @@
 """FastAPI dependencies for authentication and authorization."""
 
 from typing import Optional
+
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from wakedock.database.database import get_db_session
 from wakedock.database.models import User, UserRole
+
 from .jwt import verify_token
 from .models import TokenData
 

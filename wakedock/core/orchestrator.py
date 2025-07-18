@@ -2,20 +2,15 @@
 Docker orchestration service
 """
 
-import asyncio
 import logging
 import os
 import subprocess
-import time
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timedelta
-import json
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 import docker
-from docker.models.containers import Container
-from docker.models.images import Image
 
-from wakedock.config import get_settings, ServiceSettings
+from wakedock.config import get_settings
 from wakedock.core.caddy import caddy_manager
 
 logger = logging.getLogger(__name__)
@@ -170,7 +165,8 @@ class DockerOrchestrator:
             
             # Update Caddy configuration if service started successfully
             if success and service.get("domain"):
-                from wakedock.database.models import Service, ServiceStatus
+                from wakedock.database.models import ServiceStatus
+
                 # Create a service object for Caddy
                 caddy_service = type('Service', (), {
                     'name': service['name'],
@@ -283,7 +279,8 @@ class DockerOrchestrator:
             
             # Remove route from Caddy if service stopped successfully
             if success and service.get("domain"):
-                from wakedock.database.models import Service, ServiceStatus
+                from wakedock.database.models import ServiceStatus
+
                 # Create a service object for Caddy
                 caddy_service = type('Service', (), {
                     'name': service['name'],

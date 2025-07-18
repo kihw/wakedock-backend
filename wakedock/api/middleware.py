@@ -2,16 +2,14 @@
 Proxy middleware for handling service wake-up and routing
 """
 
-import asyncio
 import logging
 from typing import Callable
-from urllib.parse import urlparse
 
+import httpx
 from fastapi import Request, Response
 from fastapi.responses import HTMLResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import StreamingResponse
-import httpx
 
 from wakedock.core.orchestrator import DockerOrchestrator
 from wakedock.templates.loading import get_loading_page

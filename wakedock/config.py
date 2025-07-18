@@ -5,9 +5,9 @@ Configuration management for WakeDock
 import os
 from pathlib import Path
 from typing import List, Optional
-from pydantic import Field
-from pydantic_settings import BaseSettings
+
 import yaml
+from pydantic_settings import BaseSettings
 
 
 class LoggingSettings(BaseSettings):

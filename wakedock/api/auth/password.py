@@ -1,7 +1,6 @@
 """Password hashing and verification utilities."""
 
 from passlib.context import CryptContext
-from passlib.hash import bcrypt
 
 
 class PasswordManager:

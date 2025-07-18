@@ -5,11 +5,9 @@ Provides structured logging with correlation IDs, JSON formatting,
 and integration with monitoring systems.
 """
 
-import json
 import logging
 import logging.config
 import os
-import sys
 import time
 import uuid
 from contextvars import ContextVar
@@ -18,7 +16,6 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
 from pythonjsonlogger import jsonlogger
-
 
 # Context variable for correlation ID tracking
 correlation_id: ContextVar[Optional[str]] = ContextVar('correlation_id', default=None)

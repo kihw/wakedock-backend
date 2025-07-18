@@ -5,11 +5,10 @@ Monitoring service for tracking service usage and auto-shutdown
 import asyncio
 import logging
 from datetime import datetime, timedelta
-from typing import Dict, Any, List
-import time
+from typing import Any, Dict, List
 
-from wakedock.core.orchestrator import DockerOrchestrator
 from wakedock.config import get_settings
+from wakedock.core.orchestrator import DockerOrchestrator
 
 logger = logging.getLogger(__name__)
 

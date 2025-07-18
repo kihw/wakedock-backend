@@ -2,9 +2,10 @@
 Proxy endpoints for handling service requests
 """
 
-from fastapi import APIRouter, Request, HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse
 import logging
+
+from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

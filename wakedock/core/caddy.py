@@ -1,12 +1,11 @@
 """Caddy integration for WakeDock dynamic reverse proxy management."""
 
-import os
-import httpx
-import asyncio
 import logging
-from typing import Dict, List, Optional, Any
 from pathlib import Path
-from jinja2 import Environment, FileSystemLoader, Template
+from typing import Any, Dict, List
+
+import httpx
+from jinja2 import Environment, FileSystemLoader
 
 from wakedock.config import get_settings
 from wakedock.database.models import Service, ServiceStatus
