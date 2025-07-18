@@ -12,6 +12,7 @@ from wakedock.models.user import User
 # Import v1.0.0 API modules
 from wakedock.api.v1.services import router as services_router
 from wakedock.api.v1.containers import router as containers_router
+from wakedock.api.v1.routes.stacks import router as stacks_router
 
 # Create main API router
 api_router = APIRouter()
@@ -27,6 +28,11 @@ api_router.include_router(
     dependencies=[Depends(get_current_user)]
 )
 
+api_router.include_router(
+    stacks_router,
+    dependencies=[Depends(get_current_user)]
+)
+
 # Health check endpoint for v1.0.0
 @api_router.get("/health")
 async def health_check():
@@ -36,12 +42,13 @@ async def health_check():
         "version": "1.0.0",
         "features": [
             "Service Creation Wizard",
-            "Docker Compose Editor",
+            "Docker Compose Editor", 
             "GitHub Integration",
             "Advanced Container Orchestration",
             "Real-time Monitoring",
             "Network Management",
-            "Volume Management"
+            "Volume Management",
+            "Stack Detection & Categorization"
         ]
     }
 
