@@ -10,6 +10,7 @@ from wakedock.api.routes import (
     auto_deployment,
     centralized_logs,
     cicd,
+    compose_stacks,
     containers,
     health,
     images,
@@ -19,6 +20,7 @@ from wakedock.api.routes import (
     rbac,
     security_audit,
     services,
+    stacks,
     swarm,
     system,
     user_profile,
@@ -46,5 +48,7 @@ api_router.include_router(security_audit.router, tags=["security-audit"])
 api_router.include_router(cicd.router, tags=["ci-cd"])
 api_router.include_router(auto_deployment.router, tags=["auto-deployment"])
 api_router.include_router(swarm.router, tags=["swarm"])
+api_router.include_router(stacks.router, tags=["stacks"])
+api_router.include_router(compose_stacks.router, tags=["compose-stacks"])
 
 __all__ = ["api_router"]
