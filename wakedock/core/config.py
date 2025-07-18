@@ -23,3 +23,8 @@ class CoreConfig:
 
 
 config = CoreConfig()
+
+
+def get_settings() -> CoreConfig:
+    """Get settings instance"""
+    return config

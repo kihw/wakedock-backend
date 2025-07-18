@@ -326,3 +326,15 @@ class DockerManager:
         except Exception as e:
             logger.error(f"Erreur lors de la récupération des informations système: {e}")
             raise
+
+
+# Global docker manager instance
+_docker_manager: Optional[DockerManager] = None
+
+
+def get_docker_manager() -> DockerManager:
+    """Get the global docker manager instance"""
+    global _docker_manager
+    if _docker_manager is None:
+        _docker_manager = DockerManager()
+    return _docker_manager

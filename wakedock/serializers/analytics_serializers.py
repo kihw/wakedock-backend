@@ -212,7 +212,7 @@ class ServiceAnalyticsRequest(BaseModel):
 
 class ReportConfig(BaseModel):
     """Report configuration model"""
-    report_type: str = Field(..., regex=r'^(summary|detailed|comparison|trend)$')
+    report_type: str = Field(..., pattern=r'^(summary|detailed|comparison|trend)$')
     metrics: List[str] = Field(..., min_items=1, max_items=20)
     time_range: TimeRangeRequest = Field(...)
     aggregation: Optional[AggregationTypeEnum] = Field(default=AggregationTypeEnum.AVG)
@@ -241,7 +241,7 @@ class CorrelationRequest(BaseModel):
     """Request model for correlation analysis"""
     metric_ids: List[str] = Field(..., min_items=2, max_items=10)
     time_range: TimeRangeRequest = Field(...)
-    correlation_type: Optional[str] = Field(default="pearson", regex=r'^(pearson|spearman|kendall)$')
+    correlation_type: Optional[str] = Field(default="pearson", pattern=r'^(pearson|spearman|kendall)$')
     
     @validator('metric_ids')
     def validate_metric_ids(cls, v):
@@ -266,7 +266,7 @@ class AnomalyDetectionRequest(BaseModel):
     metric_id: str = Field(..., min_length=1)
     time_range: TimeRangeRequest = Field(...)
     sensitivity: Optional[float] = Field(default=2.0, ge=0.1, le=10.0)
-    algorithm: Optional[str] = Field(default="zscore", regex=r'^(zscore|isolation_forest|one_class_svm)$')
+    algorithm: Optional[str] = Field(default="zscore", pattern=r'^(zscore|isolation_forest|one_class_svm)$')
     
     @validator('metric_id')
     def validate_metric_id(cls, v):
@@ -282,7 +282,7 @@ class ForecastRequest(BaseModel):
     """Request model for forecasting"""
     metric_id: str = Field(..., min_length=1)
     forecast_hours: int = Field(default=24, ge=1, le=168)  # Max 1 week
-    model_type: Optional[str] = Field(default="linear", regex=r'^(linear|arima|prophet|lstm)$')
+    model_type: Optional[str] = Field(default="linear", pattern=r'^(linear|arima|prophet|lstm)$')
     confidence_level: Optional[float] = Field(default=0.95, ge=0.5, le=0.99)
     
     @validator('metric_id')
@@ -297,10 +297,10 @@ class ForecastRequest(BaseModel):
 
 class ExportConfig(BaseModel):
     """Export configuration model"""
-    format: str = Field(..., regex=r'^(json|csv|xlsx|parquet)$')
+    format: str = Field(..., pattern=r'^(json|csv|xlsx|parquet)$')
     metrics: List[str] = Field(..., min_items=1, max_items=50)
     time_range: Optional[TimeRangeRequest] = None
-    compression: Optional[str] = Field(default="none", regex=r'^(none|gzip|bzip2|xz)$')
+    compression: Optional[str] = Field(default="none", pattern=r'^(none|gzip|bzip2|xz)$')
     
     @validator('metrics')
     def validate_metrics(cls, v):
@@ -323,7 +323,7 @@ class ExportRequest(BaseModel):
 class BulkOperationRequest(BaseModel):
     """Request model for bulk operations"""
     metric_ids: List[str] = Field(..., min_items=1, max_items=100)
-    operation: str = Field(..., regex=r'^(delete|update_metadata|update_labels|aggregate)$')
+    operation: str = Field(..., pattern=r'^(delete|update_metadata|update_labels|aggregate)$')
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
     labels: Optional[Dict[str, Union[str, int, float, bool]]] = Field(default_factory=dict)
     aggregation_config: Optional[Dict[str, Any]] = Field(default_factory=dict)
@@ -341,7 +341,7 @@ class BulkOperationRequest(BaseModel):
 
 class WidgetConfig(BaseModel):
     """Widget configuration model"""
-    type: str = Field(..., regex=r'^(line_chart|bar_chart|pie_chart|gauge|counter|table)$')
+    type: str = Field(..., pattern=r'^(line_chart|bar_chart|pie_chart|gauge|counter|table)$')
     metric_id: str = Field(..., min_length=1)
     title: Optional[str] = Field(None, max_length=100)
     size: Optional[Dict[str, int]] = Field(default_factory=dict)
@@ -380,7 +380,7 @@ class SearchRequest(BaseModel):
     query: Optional[str] = Field(None, max_length=200)
     filters: Optional[Dict[str, Any]] = Field(default_factory=dict)
     sort_by: Optional[str] = Field(default="created_at")
-    sort_order: Optional[str] = Field(default="desc", regex=r'^(asc|desc)$')
+    sort_order: Optional[str] = Field(default="desc", pattern=r'^(asc|desc)$')
     page: Optional[int] = Field(default=1, ge=1)
     per_page: Optional[int] = Field(default=20, ge=1, le=100)
     

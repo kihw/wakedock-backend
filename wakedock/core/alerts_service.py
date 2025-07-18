@@ -9,8 +9,8 @@ import smtplib
 import ssl
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from email.mime.multipart import MimeMultipart
-from email.mime.text import MimeText
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from email.utils import formataddr
 from enum import Enum
 from pathlib import Path
@@ -97,12 +97,10 @@ class AlertRule:
     rule_id: str
     name: str
     description: str
-    enabled: bool = True
-    
-    # Conditions de déclenchement
     metric_type: str  # cpu_percent, memory_percent, etc.
     threshold_value: float
     comparison_operator: str  # >, <, >=, <=, ==, !=
+    enabled: bool = True
     duration_minutes: int = 5  # Durée avant déclenchement
     
     # Filtres
@@ -644,13 +642,13 @@ class AlertsService:
             # Configuration SMTP
             smtp_config = self.settings.notifications.email
             
-            msg = MimeMultipart('alternative')
+            msg = MIMEMultipart('alternative')
             msg['Subject'] = subject
             msg['From'] = formataddr((smtp_config.sender_name, smtp_config.sender_email))
             msg['To'] = target.email_address
             
             # Ajoute le contenu HTML
-            html_part = MimeText(body, 'html')
+            html_part = MIMEText(body, 'html')
             msg.attach(html_part)
             
             # Envoie l'email

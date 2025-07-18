@@ -1,7 +1,5 @@
 """
-Analytics Models - SQLAlch    # Metadata and labels
-    tags = Column(JSONB, default=dict)
-    metric_metadata = Column(JSONB, default=dict) models for analytics data
+Analytics Models - SQLAlchemy models for analytics data
 """
 
 from datetime import datetime
@@ -13,16 +11,17 @@ from sqlalchemy.dialects.postgresql import UUID, JSONB
 from uuid import uuid4
 
 from wakedock.core.database import Base
-from wakedock.models.base import TimestampMixin, UUIDMixin
+from wakedock.models.base import BaseModel, TimestampMixin, UUIDMixin
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-class Metric(Base, UUIDMixin, TimestampMixin):
+class Metric(BaseModel, UUIDMixin):
     """Metric model for storing metric definitions"""
     
     __tablename__ = 'metrics'
+    __table_args__ = {'extend_existing': True}
     
     # Basic metric information
     name = Column(String(100), nullable=False, unique=True, index=True)
@@ -54,10 +53,12 @@ class Metric(Base, UUIDMixin, TimestampMixin):
         return f"<Metric(id={self.id}, name={self.name}, type={self.type})>"
 
 
-class MetricData(Base, UUIDMixin, TimestampMixin):
+class MetricData(BaseModel, UUIDMixin):
     """Metric data model for storing time-series data points"""
     
     __tablename__ = 'metric_data'
+    __table_args__ = {'extend_existing': True}
+    __table_args__ = {'extend_existing': True}
     
     # Foreign key to metric
     metric_id = Column(UUID(as_uuid=True), ForeignKey('metrics.id'), nullable=False)
@@ -86,10 +87,11 @@ class MetricData(Base, UUIDMixin, TimestampMixin):
         return f"<MetricData(id={self.id}, metric_id={self.metric_id}, timestamp={self.timestamp}, value={self.value})>"
 
 
-class MetricStatistics(Base, UUIDMixin, TimestampMixin):
+class MetricStatistics(BaseModel, UUIDMixin):
     """Metric statistics model for storing aggregated statistics"""
     
     __tablename__ = 'metric_statistics'
+    __table_args__ = {'extend_existing': True}
     
     # Foreign key to metric
     metric_id = Column(UUID(as_uuid=True), ForeignKey('metrics.id'), nullable=False)
@@ -135,10 +137,11 @@ class MetricStatistics(Base, UUIDMixin, TimestampMixin):
         return f"<MetricStatistics(id={self.id}, metric_id={self.metric_id}, period={self.period_start}-{self.period_end})>"
 
 
-class Dashboard(Base, UUIDMixin, TimestampMixin):
+class Dashboard(BaseModel, UUIDMixin):
     """Dashboard model for storing dashboard configurations"""
     
-    __tablename__ = 'dashboards'
+    __tablename__ = 'analytics_dashboards'
+    __table_args__ = {'extend_existing': True}
     
     # Basic dashboard information
     name = Column(String(100), nullable=False)
@@ -172,13 +175,14 @@ class Dashboard(Base, UUIDMixin, TimestampMixin):
         return f"<Dashboard(id={self.id}, name={self.name})>"
 
 
-class Widget(Base, UUIDMixin, TimestampMixin):
+class Widget(BaseModel, UUIDMixin):
     """Widget model for storing dashboard widgets"""
     
-    __tablename__ = 'widgets'
+    __tablename__ = 'analytics_widgets'
+    __table_args__ = {'extend_existing': True}
     
     # Foreign key to dashboard
-    dashboard_id = Column(UUID(as_uuid=True), ForeignKey('dashboards.id'), nullable=False)
+    dashboard_id = Column(UUID(as_uuid=True), ForeignKey('analytics_dashboards.id'), nullable=False)
     
     # Widget information
     title = Column(String(100))
@@ -212,10 +216,11 @@ class Widget(Base, UUIDMixin, TimestampMixin):
         return f"<Widget(id={self.id}, title={self.title}, type={self.type})>"
 
 
-class Report(Base, UUIDMixin, TimestampMixin):
+class Report(BaseModel, UUIDMixin):
     """Report model for storing generated reports"""
     
-    __tablename__ = 'reports'
+    __tablename__ = 'analytics_reports'
+    __table_args__ = {'extend_existing': True}
     
     # Basic report information
     name = Column(String(100), nullable=False)
@@ -256,10 +261,11 @@ class Report(Base, UUIDMixin, TimestampMixin):
         return f"<Report(id={self.id}, name={self.name}, type={self.report_type})>"
 
 
-class Alert(Base, UUIDMixin, TimestampMixin):
+class Alert(BaseModel, UUIDMixin):
     """Alert model for storing metric alerts"""
     
-    __tablename__ = 'alerts'
+    __tablename__ = 'analytics_alerts'
+    __table_args__ = {'extend_existing': True}
     
     # Foreign key to metric
     metric_id = Column(UUID(as_uuid=True), ForeignKey('metrics.id'), nullable=False)
@@ -304,13 +310,14 @@ class Alert(Base, UUIDMixin, TimestampMixin):
         return f"<Alert(id={self.id}, name={self.name}, metric_id={self.metric_id})>"
 
 
-class AlertIncident(Base, UUIDMixin, TimestampMixin):
+class AlertIncident(BaseModel, UUIDMixin):
     """Alert incident model for storing alert occurrences"""
     
-    __tablename__ = 'alert_incidents'
+    __tablename__ = 'analytics_alert_incidents'
+    __table_args__ = {'extend_existing': True}
     
     # Foreign key to alert
-    alert_id = Column(UUID(as_uuid=True), ForeignKey('alerts.id'), nullable=False)
+    alert_id = Column(UUID(as_uuid=True), ForeignKey('analytics_alerts.id'), nullable=False)
     
     # Incident information
     triggered_at = Column(DateTime, nullable=False)
@@ -344,10 +351,11 @@ class AlertIncident(Base, UUIDMixin, TimestampMixin):
         return f"<AlertIncident(id={self.id}, alert_id={self.alert_id}, triggered_at={self.triggered_at})>"
 
 
-class Correlation(Base, UUIDMixin, TimestampMixin):
+class Correlation(BaseModel, UUIDMixin):
     """Correlation model for storing metric correlations"""
     
-    __tablename__ = 'correlations'
+    __tablename__ = 'analytics_correlations'
+    __table_args__ = {'extend_existing': True}
     
     # Metric pairs
     metric_1_id = Column(UUID(as_uuid=True), ForeignKey('metrics.id'), nullable=False)
@@ -382,10 +390,11 @@ class Correlation(Base, UUIDMixin, TimestampMixin):
         return f"<Correlation(id={self.id}, metric_1={self.metric_1_id}, metric_2={self.metric_2_id}, coeff={self.correlation_coefficient})>"
 
 
-class Anomaly(Base, UUIDMixin, TimestampMixin):
+class Anomaly(BaseModel, UUIDMixin):
     """Anomaly model for storing detected anomalies"""
     
-    __tablename__ = 'anomalies'
+    __tablename__ = 'analytics_anomalies'
+    __table_args__ = {'extend_existing': True}
     
     # Foreign key to metric
     metric_id = Column(UUID(as_uuid=True), ForeignKey('metrics.id'), nullable=False)
@@ -424,10 +433,11 @@ class Anomaly(Base, UUIDMixin, TimestampMixin):
         return f"<Anomaly(id={self.id}, metric_id={self.metric_id}, timestamp={self.timestamp}, value={self.value})>"
 
 
-class Forecast(Base, UUIDMixin, TimestampMixin):
+class Forecast(BaseModel, UUIDMixin):
     """Forecast model for storing forecasting data"""
     
-    __tablename__ = 'forecasts'
+    __tablename__ = 'analytics_forecasts'
+    __table_args__ = {'extend_existing': True}
     
     # Foreign key to metric
     metric_id = Column(UUID(as_uuid=True), ForeignKey('metrics.id'), nullable=False)
@@ -473,10 +483,11 @@ class Forecast(Base, UUIDMixin, TimestampMixin):
         return f"<Forecast(id={self.id}, metric_id={self.metric_id}, horizon={self.forecast_horizon}h)>"
 
 
-class Export(Base, UUIDMixin, TimestampMixin):
+class Export(BaseModel, UUIDMixin):
     """Export model for storing data export information"""
     
-    __tablename__ = 'exports'
+    __tablename__ = 'analytics_exports'
+    __table_args__ = {'extend_existing': True}
     
     # Export configuration
     name = Column(String(100))

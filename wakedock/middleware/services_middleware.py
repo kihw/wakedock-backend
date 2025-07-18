@@ -2,14 +2,15 @@
 Middleware for services operations
 """
 
+import json
 import time
 import logging
-from typing import Dict, Any, Optional, Callable, Awaitable
+from typing import Dict, Any, Optional, Callable, Awaitable, List
 from datetime import datetime
 from contextlib import asynccontextmanager
 
 from fastapi import Request, Response
-from fastapi.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.base import RequestResponseEndpoint
 
 from wakedock.middleware.base_middleware import BaseMiddleware

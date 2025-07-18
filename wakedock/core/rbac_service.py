@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 
 from sqlalchemy.orm import Session
 
-from wakedock.core.database import get_database
+from wakedock.core.database import get_sync_db
 from wakedock.models.user import (
     AuditLog,
     Permission,
@@ -212,7 +212,7 @@ class RBACService:
         Initialise les rôles et permissions par défaut au démarrage
         """
         try:
-            db = next(get_database())
+            db = get_sync_db()
             
             # Créer toutes les permissions
             await self._create_default_permissions(db)
@@ -343,7 +343,7 @@ class RBACService:
         Assigne un rôle à un utilisateur
         """
         try:
-            db = next(get_database())
+            db = get_sync_db()
             
             # Vérifier que l'utilisateur et le rôle existent
             user = db.query(User).filter(User.id == user_id).first()
@@ -401,7 +401,7 @@ class RBACService:
         Retire un rôle d'un utilisateur
         """
         try:
-            db = next(get_database())
+            db = get_sync_db()
             
             # Chercher l'association
             user_role = db.query(UserRole).filter(
@@ -444,7 +444,7 @@ class RBACService:
         Récupère toutes les permissions effectives d'un utilisateur
         """
         try:
-            db = next(get_database())
+            db = get_sync_db()
             
             user = db.query(User).filter(User.id == user_id).first()
             if not user:
@@ -488,7 +488,7 @@ class RBACService:
         Crée un nouveau rôle personnalisé
         """
         try:
-            db = next(get_database())
+            db = get_sync_db()
             
             # Vérifier que le nom n'existe pas déjà
             existing = db.query(Role).filter(Role.name == name).first()
@@ -536,7 +536,7 @@ class RBACService:
         Récupère tous les rôles avec leurs permissions
         """
         try:
-            db = next(get_database())
+            db = get_sync_db()
             
             roles = db.query(Role).filter(Role.is_active == True).all()
             
@@ -569,7 +569,7 @@ class RBACService:
         Récupère toutes les permissions organisées par catégorie
         """
         try:
-            db = next(get_database())
+            db = get_sync_db()
             
             permissions = db.query(Permission).filter(Permission.is_active == True).all()
             
@@ -631,7 +631,7 @@ class RBACService:
         Récupère les logs d'audit avec filtres et pagination
         """
         try:
-            db = next(get_database())
+            db = get_sync_db()
             
             # Construire la requête
             query = db.query(AuditLog)
@@ -696,7 +696,7 @@ class RBACService:
         Nettoie les assignations de rôles expirées
         """
         try:
-            db = next(get_database())
+            db = get_sync_db()
             
             expired_assignments = db.query(UserRole).filter(
                 UserRole.expires_at != None,

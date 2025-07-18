@@ -10,7 +10,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 security = HTTPBearer()
 
 
-\1et_current_user(
+def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ) -> str:
 
@@ -32,7 +32,7 @@ security = HTTPBearer()
     return credentials.credentials
 
 
-\1et_current_user_optional(
+def get_current_user_optional(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(
         HTTPBearer(auto_error=False)
     ),

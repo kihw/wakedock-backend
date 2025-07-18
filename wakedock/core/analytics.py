@@ -90,19 +90,22 @@ class AnalyticsService:
         self.alerts: List[Dict[str, Any]] = []
         self.cleanup_task = None
         
-        # Start background tasks
-        self.start_background_tasks()
+        # Don't start background tasks during initialization
+        # They will be started when the service is properly initialized
     
     async def initialize(self) -> None:
         """Initialize analytics service"""
         logger.info("Initializing analytics service")
         await self.cleanup_old_data()
         await self.calculate_baseline_metrics()
+        # Start background tasks after initialization
+        self.start_background_tasks()
         logger.info("Analytics service initialized")
     
     def start_background_tasks(self) -> None:
         """Start background tasks for analytics processing"""
-        self.cleanup_task = asyncio.create_task(self.periodic_cleanup())
+        if self.cleanup_task is None:
+            self.cleanup_task = asyncio.create_task(self.periodic_cleanup())
     
     async def periodic_cleanup(self) -> None:
         """Periodic cleanup of old data"""

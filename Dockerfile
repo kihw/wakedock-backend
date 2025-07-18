@@ -31,6 +31,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
     redis-tools \
+    git \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
     && rm -rf /tmp/* /var/tmp/*

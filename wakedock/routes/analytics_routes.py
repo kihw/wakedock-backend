@@ -767,19 +767,19 @@ async def stream_metric_data(
 
 # WebSocket endpoints would go here for real-time updates
 
-# Error handlers
+# Error handlers (should be registered on app level, not router level)
 
-@router.exception_handler(ValidationError)
-async def validation_error_handler(request, exc):
-    """Handle validation errors"""
-    view = AnalyticsView()
-    return JSONResponse(
-        status_code=400,
-        content=view.format_error_response(str(exc), "VALIDATION_ERROR")
-    )
+# # @router.exception_handler(ValidationError)
+# async def validation_error_handler(request, exc):
+#     """Handle validation errors"""
+#     view = AnalyticsView()
+#     return JSONResponse(
+#         status_code=400,
+#         content=view.format_error_response(str(exc), "VALIDATION_ERROR")
+#     )
 
 
-@router.exception_handler(NotFoundError)
+# @router.exception_handler(NotFoundError)
 async def not_found_error_handler(request, exc):
     """Handle not found errors"""
     view = AnalyticsView()
@@ -789,7 +789,7 @@ async def not_found_error_handler(request, exc):
     )
 
 
-@router.exception_handler(ServiceError)
+# @router.exception_handler(ServiceError)
 async def service_error_handler(request, exc):
     """Handle service errors"""
     view = AnalyticsView()
@@ -804,3 +804,7 @@ async def service_error_handler(request, exc):
 async def ping():
     """Health check endpoint"""
     return {"status": "ok", "timestamp": datetime.utcnow().isoformat()}
+
+
+# Export the router
+analytics_router = router

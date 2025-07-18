@@ -35,7 +35,7 @@ class DatabaseManager:
             return db_url
         
         # Default to SQLite for development
-        db_path = os.path.join(self.settings.data_path, "wakedock.db")
+        db_path = os.path.join(self.settings.wakedock.data_path, "wakedock.db")
         return f"sqlite:///{db_path}"
     
     def initialize(self) -> None:
@@ -112,6 +112,13 @@ db_manager = DatabaseManager()
 def get_db_session() -> Generator[Session, None, None]:
     """FastAPI dependency for database sessions."""
     with db_manager.get_session() as session:
+        yield session
+
+
+async def get_async_session():
+    """Get async database session - for modern async/await usage"""
+    from wakedock.core.database import get_db
+    async for session in get_db():
         yield session
 
 

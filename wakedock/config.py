@@ -94,6 +94,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_nested_delimiter = "__"
+        extra = "allow"  # Allow extra fields from YAML config
 
 
 def load_config_from_yaml(config_path: str) -> dict:

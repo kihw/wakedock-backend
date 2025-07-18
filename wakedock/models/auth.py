@@ -16,7 +16,8 @@ user_roles = Table(
     'user_roles',
     BaseModel.metadata,
     Column('user_id', String, ForeignKey('users.id'), primary_key=True),
-    Column('role_id', String, ForeignKey('roles.id'), primary_key=True)
+    Column('role_id', String, ForeignKey('roles.id'), primary_key=True),
+    extend_existing=True
 )
 
 # Association table for many-to-many relationship between roles and permissions
@@ -24,7 +25,8 @@ role_permissions = Table(
     'role_permissions',
     BaseModel.metadata,
     Column('role_id', String, ForeignKey('roles.id'), primary_key=True),
-    Column('permission_id', String, ForeignKey('permissions.id'), primary_key=True)
+    Column('permission_id', String, ForeignKey('permissions.id'), primary_key=True),
+    extend_existing=True
 )
 
 
@@ -32,6 +34,7 @@ class User(BaseModel):
     """User model for authentication"""
     
     __tablename__ = 'users'
+    __table_args__ = {'extend_existing': True}
     
     # Basic user information
     username = Column(String(50), unique=True, nullable=False, index=True)
@@ -101,6 +104,8 @@ class Role(BaseModel):
     """Role model for authorization"""
     
     __tablename__ = 'roles'
+    __table_args__ = {'extend_existing': True}
+    __mapper_args__ = {'include_properties': ['id', 'created_at', 'updated_at', 'name', 'description', 'is_system']}
     
     # Role information
     name = Column(String(50), unique=True, nullable=False, index=True)
@@ -146,6 +151,7 @@ class Permission(BaseModel):
     """Permission model for fine-grained authorization"""
     
     __tablename__ = 'permissions'
+    __table_args__ = {'extend_existing': True}
     
     # Permission information
     name = Column(String(100), unique=True, nullable=False, index=True)
@@ -181,6 +187,7 @@ class UserSession(BaseModel):
     """User session model for tracking active sessions"""
     
     __tablename__ = 'user_sessions'
+    __table_args__ = {'extend_existing': True}
     
     # Session information
     user_id = Column(String, ForeignKey('users.id'), nullable=False)

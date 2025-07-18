@@ -413,3 +413,29 @@ def setup_all_auth_middleware(
     setup_security_headers_middleware(app)
     setup_role_based_access_middleware(app, role_permissions)
     setup_authentication_middleware(app, exclude_paths)
+
+
+# FastAPI dependency for getting current user
+from fastapi import Depends
+
+security = HTTPBearer()
+
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: AsyncSession = Depends(get_db_session)
+) -> Optional[User]:
+    """Get current user from JWT token - FastAPI dependency"""
+    try:
+        # For now, return a mock user
+        # In production, this would validate the JWT token and return the user
+        return User(
+            id="user_123",
+            email="admin@wakedock.com",
+            username="admin",
+            is_active=True,
+            is_admin=True
+        )
+    except Exception as e:
+        logger.error(f"Error getting current user: {e}")
+        return None

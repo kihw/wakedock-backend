@@ -34,6 +34,20 @@ class Container(AuditableModel):
         return f"<Container {self.id}: {self.name}>"
 
 
+class Service(AuditableModel):
+    """Model for services"""
+    
+    __tablename__ = "services"
+    __table_args__ = {'extend_existing': True}
+    
+    name = Column(String(100), nullable=False)
+    description = Column(Text)
+    status = Column(String(20), default="active")
+    
+    def __repr__(self):
+        return f"<Service(id={self.id}, name={self.name}, status={self.status})>"
+
+
 class ContainerStack(AuditableModel):
     """Model for container stacks"""
     

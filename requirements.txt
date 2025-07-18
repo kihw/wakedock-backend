@@ -42,6 +42,7 @@ cachetools==5.3.2        # Caching utilities
 tenacity==8.2.3          # Retry utilities
 prometheus-fastapi-instrumentator==6.1.0  # FastAPI metrics
 structlog==23.2.0        # Structured logging
+scipy==1.16.0            # Scientific computing for analytics
 
 # Development dependencies
 pytest==7.4.3

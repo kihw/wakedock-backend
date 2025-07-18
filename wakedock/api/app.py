@@ -10,6 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from wakedock.api.auth.routes import router as auth_router
 from wakedock.api.middleware import ProxyMiddleware
 from wakedock.api.routes import (
+    alerts,
+    analytics,
     centralized_logs,
     compose_stacks,
     container_lifecycle,
@@ -20,6 +22,7 @@ from wakedock.api.routes import (
     health,
     images,
     logs,
+    monitoring,
     proxy,
     services,
     system,
@@ -29,6 +32,8 @@ from wakedock.api.v1.routes import (
     services as services_v1,
     containers as containers_v1,
 )
+# Import new MVC analytics routes
+from wakedock.routes.analytics_routes import analytics_router
 from wakedock.config import get_settings
 from wakedock.core.advanced_analytics import AdvancedAnalyticsService
 from wakedock.core.alerts_service import AlertsService
@@ -38,7 +43,7 @@ from wakedock.core.orchestrator import DockerOrchestrator
 logger = logging.getLogger(__name__)
 
 
-def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService, analytics: AdvancedAnalyticsService = None, alerts: AlertsService = None) -> FastAPI:
+def create_app(orchestrator: DockerOrchestrator, monitoring_service: MonitoringService, analytics_service: AdvancedAnalyticsService = None, alerts_service: AlertsService = None) -> FastAPI:
     """Create and configure FastAPI application"""
     settings = get_settings()
     
@@ -146,13 +151,21 @@ def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService, 
     )
     
     # Advanced analytics routes
-    if analytics:
+    if analytics_service:
         app.include_router(
             analytics.router,
             tags=["analytics"]
         )
-     # Alerts routes
-    if alerts:
+    
+    # New MVC Analytics routes - always include as they're self-contained
+    app.include_router(
+        analytics_router,
+        prefix="/api/v1/analytics",
+        tags=["analytics-mvc"]
+    )
+    
+    # Advanced alerts routes
+    if alerts_service:
         app.include_router(
             alerts.router,
             tags=["alerts"]
@@ -191,9 +204,9 @@ def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService, 
     
     # Store dependencies in app state
     app.state.orchestrator = orchestrator
-    app.state.monitoring = monitoring
-    app.state.analytics = analytics
-    app.state.alerts = alerts
+    app.state.monitoring = monitoring_service
+    app.state.analytics = analytics_service
+    app.state.alerts = alerts_service
     app.state.settings = settings
     
     @app.on_event("startup")
@@ -201,17 +214,17 @@ def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService, 
         logger.info("WakeDock API started")
         
         # Initialize analytics service if provided
-        if analytics:
+        if analytics_service:
             try:
-                await analytics.start()
+                await analytics_service.start()
                 logger.info("Advanced Analytics service started")
             except Exception as e:
                 logger.error(f"Failed to start Analytics service: {e}")
         
         # Initialize alerts service if provided
-        if alerts:
+        if alerts_service:
             try:
-                await alerts.start()
+                await alerts_service.start()
                 logger.info("Alerts service started")
             except Exception as e:
                 logger.error(f"Failed to start Alerts service: {e}")
@@ -221,17 +234,17 @@ def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService, 
         logger.info("WakeDock API shutting down")
         
         # Stop analytics service if running
-        if analytics:
+        if analytics_service:
             try:
-                await analytics.stop()
+                await analytics_service.stop()
                 logger.info("Advanced Analytics service stopped")
             except Exception as e:
                 logger.error(f"Error stopping Analytics service: {e}")
         
         # Stop alerts service if running
-        if alerts:
+        if alerts_service:
             try:
-                await alerts.stop()
+                await alerts_service.stop()
                 logger.info("Alerts service stopped")
             except Exception as e:
                 logger.error(f"Error stopping Alerts service: {e}")

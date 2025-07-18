@@ -68,6 +68,19 @@ def get_sync_db() -> Session:
         db.close()
 
 
+def get_db_session():
+    """Get database session - for FastAPI dependency injection"""
+    db = SessionLocal()
+    try:
+        yield db
+    except Exception as e:
+        logger.error(f"Database error: {e}")
+        db.rollback()
+        raise
+    finally:
+        db.close()
+
+
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     """Get async session - alias for get_db"""
     async for session in get_db():
@@ -146,3 +159,8 @@ class DatabaseManager:
 
 # Global database manager instance
 db_manager = DatabaseManager()
+
+
+def get_database():
+    """Get database manager instance"""
+    return db_manager

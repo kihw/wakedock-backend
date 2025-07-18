@@ -44,7 +44,7 @@ class SecurityEvent(Base):
     
     # Données structurées
     details = Column(JSON, nullable=True)
-    metadata = Column(JSON, nullable=True)
+    event_model_metadata = Column(JSON, nullable=True)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
@@ -89,7 +89,7 @@ class AnomalyDetection(Base):
     resolution_notes = Column(Text, nullable=True)
     
     # Métadonnées
-    metadata = Column(JSON, nullable=True)
+    anomaly_model_metadata = Column(JSON, nullable=True)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
@@ -134,7 +134,7 @@ class SecurityCompliance(Base):
     
     # Métadonnées
     assessed_by = Column(Integer, ForeignKey("users.id"), nullable=True)
-    metadata = Column(JSON, nullable=True)
+    model_metadata = Column(JSON, nullable=True)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -177,7 +177,7 @@ class SecurityAlert(Base):
     manual_actions_required = Column(JSON, nullable=True)
     
     # Métadonnées
-    metadata = Column(JSON, nullable=True)
+    model_metadata = Column(JSON, nullable=True)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
@@ -219,7 +219,7 @@ class SecurityMetrics(Base):
     compliance_scores = Column(JSON, nullable=True)
     
     # Métadonnées
-    calculation_metadata = Column(JSON, nullable=True)
+    calculation_model_metadata = Column(JSON, nullable=True)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -259,7 +259,7 @@ class LogRetention(Base):
     deleted_at = Column(DateTime, nullable=True)
     
     # Métadonnées
-    metadata = Column(JSON, nullable=True)
+    model_metadata = Column(JSON, nullable=True)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)

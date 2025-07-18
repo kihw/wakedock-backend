@@ -31,3 +31,6 @@ class Cache:
 
 
 cache = Cache()
+
+# Alias for compatibility
+cache_service = cache

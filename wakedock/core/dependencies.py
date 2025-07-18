@@ -2,13 +2,18 @@
 Dépendances FastAPI pour l'application WakeDock
 """
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy.orm import Session
+
+# Security scheme for JWT authentication
+oauth2_scheme = HTTPBearer()
 
 from wakedock.core.alerts_service import AlertsService
 from wakedock.core.auth_service import AuthService, get_auth_service
 from wakedock.core.auto_deployment_service import AutoDeploymentService
 from wakedock.core.cicd_service import CICDService, get_cicd_service
 from wakedock.core.docker_manager import DockerManager
+from wakedock.core.docker_client import docker_client
 from wakedock.core.environment_service import EnvironmentService
 from wakedock.core.log_optimization_service import LogOptimizationService
 from wakedock.core.metrics_collector import MetricsCollector
@@ -22,7 +27,7 @@ from wakedock.core.user_profile_service import (
     get_user_profile_service,
     UserProfileService,
 )
-from wakedock.database.database import get_async_session
+from wakedock.database.database import get_db_session
 
 # Instances globales
 _docker_manager: DockerManager = None
@@ -48,6 +53,12 @@ def get_docker_manager() -> DockerManager:
         _docker_manager = DockerManager()
     
     return _docker_manager
+
+
+def get_docker_client():
+    """Get Docker client instance"""
+    return docker_client
+
 
 def get_metrics_collector() -> MetricsCollector:
     """
@@ -145,7 +156,7 @@ def get_cicd_service_dependency() -> CICDService:
     return _cicd_service
 
 def get_auto_deployment_service(
-    db: AsyncSession = Depends(get_async_session),
+    db: Session = Depends(get_db_session),
     security_service: SecurityAuditService = Depends(get_security_audit_service_dependency),
     rbac_service: RBACService = Depends(get_rbac_service_dependency)
 ) -> AutoDeploymentService:
@@ -160,7 +171,7 @@ def get_auto_deployment_service(
     )
 
 def get_swarm_service(
-    db: AsyncSession = Depends(get_async_session),
+    db: Session = Depends(get_db_session),
     security_service: SecurityAuditService = Depends(get_security_audit_service_dependency),
     rbac_service: RBACService = Depends(get_rbac_service_dependency)
 ) -> SwarmService:
@@ -175,21 +186,28 @@ def get_swarm_service(
     )
 
 def get_environment_service(
-    db: AsyncSession = Depends(get_async_session),
-    security_service: SecurityAuditService = Depends(get_security_audit_service_dependency),
-    rbac_service: RBACService = Depends(get_rbac_service_dependency),
-    docker_manager: DockerManager = Depends(get_docker_manager)
+    db: Session = Depends(get_db_session),
 ) -> EnvironmentService:
-    """
-    Factory function pour créer le service des environnements
-    Utilisé comme dependency FastAPI avec injection des dépendances
-    """
-    return EnvironmentService(
-        db_session=db,
-        security_service=security_service,
-        rbac_service=rbac_service,
-        docker_manager=docker_manager
-    )
+    """Get environment service with database session"""
+    return EnvironmentService(db)
+
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(oauth2_scheme),
+    db: Session = Depends(get_db_session),
+) -> dict:
+    """Get current user from JWT token"""
+    # For now, return a mock user
+    # In production, this would validate the JWT token and return the user
+    return {
+        "id": 1,
+        "username": "admin",
+        "email": "admin@wakedock.com",
+        "roles": ["admin"]
+    }
+
+
+# Services lifecycle management
 
 async def startup_services():
     """

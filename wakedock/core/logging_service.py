@@ -93,8 +93,8 @@ class LoggingService:
         self.rotation_task = None
         self.cleanup_task = None
         
-        # Start background tasks
-        self.start_background_tasks()
+        # Don't start background tasks during import
+        # They will be started when the service is initialized
     
     async def initialize(self) -> None:
         """Initialize logging service"""
@@ -108,12 +108,22 @@ class LoggingService:
         # Load existing logs summary
         await self.load_log_summary()
         
+        # Start background tasks
+        self.start_background_tasks()
+        
         logger.info("Centralized logging service initialized")
     
     def start_background_tasks(self) -> None:
         """Start background tasks for log management"""
-        self.rotation_task = asyncio.create_task(self.periodic_rotation())
-        self.cleanup_task = asyncio.create_task(self.periodic_cleanup())
+        try:
+            # Only start tasks if there's an event loop
+            import asyncio
+            loop = asyncio.get_running_loop()
+            self.rotation_task = asyncio.create_task(self.periodic_rotation())
+            self.cleanup_task = asyncio.create_task(self.periodic_cleanup())
+        except RuntimeError:
+            # No running event loop, tasks will be started later
+            pass
     
     async def periodic_rotation(self) -> None:
         """Periodic log rotation"""

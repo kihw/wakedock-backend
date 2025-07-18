@@ -143,7 +143,7 @@ class ReportExecution(Base):
     file_path = Column(String(255))
     file_size = Column(Integer)
     error_message = Column(Text)
-    metadata = Column(JSON)
+    execution_metadata = Column(JSON)
     
     # Relationships
     report = relationship("DashboardReport", back_populates="executions")
@@ -300,7 +300,7 @@ class DashboardMetric(Base):
     metric_value = Column(Float)
     metric_type = Column(String(50))
     timestamp = Column(DateTime, default=func.now())
-    metadata = Column(JSON)
+    metric_metadata = Column(JSON)
     
     # Relationships
     dashboard = relationship("Dashboard")
