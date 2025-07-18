@@ -1,5 +1,7 @@
 """
-Analytics Models - SQLAlchemy models for analytics data
+Analytics Models - SQLAlch    # Metadata and labels
+    tags = Column(JSONB, default=dict)
+    metric_metadata = Column(JSONB, default=dict) models for analytics data
 """
 
 from datetime import datetime
@@ -11,7 +13,7 @@ from sqlalchemy.dialects.postgresql import UUID, JSONB
 from uuid import uuid4
 
 from wakedock.core.database import Base
-from wakedock.core.models import TimestampMixin, UUIDMixin
+from wakedock.models.base import TimestampMixin, UUIDMixin
 
 import logging
 logger = logging.getLogger(__name__)
@@ -30,7 +32,7 @@ class Metric(Base, UUIDMixin, TimestampMixin):
     
     # Metadata and labels
     labels = Column(JSONB, default=dict)
-    metadata = Column(JSONB, default=dict)
+    metric_metadata = Column(JSONB, default=dict)
     
     # Configuration
     retention_days = Column(Integer, default=90)
@@ -527,7 +529,7 @@ def create_metric_with_defaults(name: str, metric_type: str, **kwargs) -> Metric
         description=kwargs.get('description', ''),
         unit=kwargs.get('unit', ''),
         labels=kwargs.get('labels', {}),
-        metadata=kwargs.get('metadata', {}),
+        metric_metadata=kwargs.get('metadata', {}),
         retention_days=kwargs.get('retention_days', 90),
         sampling_rate=kwargs.get('sampling_rate', 1.0),
         active=kwargs.get('active', True)

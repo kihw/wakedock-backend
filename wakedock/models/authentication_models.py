@@ -5,12 +5,12 @@ Models for authentication and user management
 from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, ForeignKey, JSON, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from wakedock.models.base import BaseModel, AuditableModel
+from wakedock.models.base import BaseModel, AuditableModel, Base
 
 # Association table for user-role many-to-many relationship
 user_roles = Table(
     'user_roles',
-    BaseModel.metadata,
+    Base.metadata,
     Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
     Column('role_id', Integer, ForeignKey('roles.id'), primary_key=True)
 )

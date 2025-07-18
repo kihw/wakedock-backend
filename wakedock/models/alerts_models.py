@@ -19,7 +19,7 @@ class Alert(AuditableModel):
     target = Column(String(255), nullable=True)
     status = Column(String(50), default="active")  # active, resolved, dismissed
     alert_type = Column(String(100), nullable=False)
-    metadata = Column(JSON, nullable=True)
+    alert_metadata = Column(JSON, nullable=True)
     acknowledged = Column(Boolean, default=False)
     acknowledged_by = Column(String(255), nullable=True)
     acknowledged_at = Column(DateTime(timezone=True), nullable=True)
