@@ -25,6 +25,10 @@ from wakedock.api.routes import (
     system,
     user_preferences,
 )
+from wakedock.api.v1.routes import (
+    services as services_v1,
+    containers as containers_v1,
+)
 from wakedock.config import get_settings
 from wakedock.core.advanced_analytics import AdvancedAnalyticsService
 from wakedock.core.alerts_service import AlertsService
@@ -164,6 +168,19 @@ def create_app(orchestrator: DockerOrchestrator, monitoring: MonitoringService, 
     app.include_router(
         user_preferences.router,
         tags=["user-preferences"]
+    )
+
+    # Version 1.0.0 API routes
+    app.include_router(
+        services_v1.router,
+        prefix="/api/v1",
+        tags=["services-v1"]
+    )
+    
+    app.include_router(
+        containers_v1.router,
+        prefix="/api/v1",
+        tags=["containers-v1"]
     )
 
     app.include_router(
