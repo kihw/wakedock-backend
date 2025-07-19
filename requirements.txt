@@ -17,7 +17,7 @@ jinja2==3.1.2
 starlette==0.27.0
 
 # New dependencies for v1.0.0 features
-docker==7.0.0            # Docker SDK for Python
+docker==7.1.0            # Docker SDK for Python - Updated for compatibility
 PyYAML==6.0.1            # YAML parsing for Docker Compose
 aiohttp==3.9.1           # Async HTTP client for GitHub API
 gitpython==3.1.40        # Git operations for repository cloning
@@ -28,7 +28,7 @@ celery==5.3.4            # Background task processing
 flower==2.0.1            # Celery monitoring
 prometheus-client==0.19.0 # Prometheus metrics
 jsonschema==4.20.0       # JSON schema validation
-cryptography==41.0.8     # Enhanced encryption
+cryptography==42.0.8     # Enhanced encryption - Updated for security
 networkx==3.2.1          # Network analysis and management
 schedule==1.2.0          # Task scheduling
 click==8.1.7             # CLI utilities
@@ -42,7 +42,7 @@ cachetools==5.3.2        # Caching utilities
 tenacity==8.2.3          # Retry utilities
 prometheus-fastapi-instrumentator==6.1.0  # FastAPI metrics
 structlog==23.2.0        # Structured logging
-scipy==1.16.0            # Scientific computing for analytics
+scipy==1.11.4            # Scientific computing for analytics
 
 # Development dependencies
 pytest==7.4.3
