@@ -10,7 +10,7 @@ import strawberry
 from wakedock.graphql.schema import schema
 from wakedock.core.auth import get_current_user
 from wakedock.core.rbac_service import RBACService
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 # Create GraphQL router
 graphql_router = GraphQLRouter(

@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 from wakedock.core.auth_middleware import require_authenticated_user
 from wakedock.core.dependencies import get_swarm_service
 from wakedock.core.swarm_service import SwarmService
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 logger = logging.getLogger(__name__)
 

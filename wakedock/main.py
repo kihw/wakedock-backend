@@ -8,7 +8,9 @@ from pathlib import Path
 
 import uvicorn
 
-from wakedock.api.app import create_app
+# Temporarily use minimal app to bypass import issues
+# from wakedock.api.app import create_app
+from wakedock.api.app_minimal import create_minimal_app as create_app
 from wakedock.config import get_settings
 from wakedock.core.advanced_analytics import AdvancedAnalyticsService
 from wakedock.core.alerts_service import AlertsService
@@ -88,8 +90,9 @@ def create_application():
     # Connect monitoring service to orchestrator
     monitoring_service.set_orchestrator(orchestrator)
     
-    # Create FastAPI app
-    app = create_app(orchestrator, monitoring_service, analytics_service, alerts_service)
+    # Create FastAPI app - using minimal version temporarily
+    # app = create_app(orchestrator, monitoring_service, analytics_service, alerts_service)
+    app = create_app()
     
     return app
 

@@ -279,7 +279,7 @@ def extend_user_model():
     À appeler après l'import du modèle User existant
     """
     try:
-        from wakedock.models.user import User
+        from wakedock.database.models import User
 
         # Ajouter les relations si elles n'existent pas déjà
         if not hasattr(User, 'security_events'):

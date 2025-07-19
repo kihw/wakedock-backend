@@ -17,7 +17,7 @@ from sqlalchemy.orm import selectinload
 
 from wakedock.core.auth_middleware import require_authenticated_user
 from wakedock.database.database import get_async_session
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +70,7 @@ async def get_user_theme_preferences(
         # Si l'utilisateur n'a pas de préférences, retourne les valeurs par défaut
         if not hasattr(user, 'theme_preferences') or not user.theme_preferences:
             # Créer des préférences par défaut
-            from wakedock.models.user import UserThemePreferences
+            from wakedock.database.models import UserThemePreferences
             
             default_prefs = UserThemePreferences(
                 user_id=user.id,
@@ -147,7 +147,7 @@ async def update_user_theme_preferences(
                 detail="Utilisateur non trouvé"
             )
         
-        from wakedock.models.user import UserThemePreferences
+        from wakedock.database.models import UserThemePreferences
 
         # Si l'utilisateur n'a pas de préférences existantes, en créer
         if not hasattr(user, 'theme_preferences') or not user.theme_preferences:
@@ -215,7 +215,7 @@ async def reset_user_theme_preferences(
     Remet à zéro les préférences de thème de l'utilisateur (valeurs par défaut)
     """
     try:
-        from wakedock.models.user import UserThemePreferences
+        from wakedock.database.models import UserThemePreferences
 
         # Supprime les préférences existantes
         query = delete(UserThemePreferences).where(UserThemePreferences.user_id == current_user.id)

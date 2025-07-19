@@ -16,7 +16,7 @@ from wakedock.core.environment_service import (
     EnvironmentType,
     PromotionType,
 )
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 logger = logging.getLogger(__name__)
 

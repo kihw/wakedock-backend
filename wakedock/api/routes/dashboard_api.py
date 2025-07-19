@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from wakedock.core.auth import get_current_user
 from wakedock.core.dashboard_service import DashboardCustomizationService
 from wakedock.core.database import get_db_session
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 # Création du router
 router = APIRouter(prefix="/api/v1/dashboard", tags=["Dashboard Customization"])

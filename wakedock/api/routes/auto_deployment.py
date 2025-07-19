@@ -52,7 +52,7 @@ from wakedock.models.deployment import (
     DeploymentHistory,
     DeploymentSecret,
 )
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 logger = logging.getLogger(__name__)
 

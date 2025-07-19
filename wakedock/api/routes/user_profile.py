@@ -16,7 +16,7 @@ from wakedock.core.user_profile_service import (
 )
 from wakedock.database.database import get_db
 from wakedock.logging import get_logger
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/profile", tags=["user-profile"])

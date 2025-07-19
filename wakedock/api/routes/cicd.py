@@ -18,7 +18,7 @@ from wakedock.core.cicd_service import (
     GitHubActionConfig,
 )
 from wakedock.core.dependencies import get_current_user
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 logger = logging.getLogger(__name__)
 

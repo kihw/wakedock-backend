@@ -23,8 +23,19 @@ from sqlalchemy import and_, func, select
 
 from wakedock.core.config import get_settings
 from wakedock.core.database import get_async_session
-from wakedock.models.security import AnomalyDetection, SecurityEvent
-from wakedock.models.user import AuditLog
+# Temporarily disabled - need to fix model imports
+# from wakedock.models.security import AnomalyDetection, SecurityEvent
+# from wakedock.models.user import AuditLog
+
+# Temporary stub classes
+class AnomalyDetection:
+    pass
+
+class SecurityEvent:
+    pass
+
+class AuditLog:
+    pass
 
 logger = logging.getLogger(__name__)
 

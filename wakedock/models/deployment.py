@@ -498,7 +498,7 @@ def add_deployment_relations_to_user():
     Fonction helper pour ajouter relations déploiement au modèle User existant.
     À appeler après import du modèle User.
     """
-    from wakedock.models.user import User
+    from wakedock.database.models import User
 
     # Ajouter relations si pas déjà présentes
     if not hasattr(User, 'auto_deployments'):

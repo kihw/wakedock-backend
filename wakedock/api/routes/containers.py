@@ -23,7 +23,7 @@ from wakedock.serializers.container_serializers import (
 )
 from wakedock.core.database import get_db_session
 from wakedock.middleware.auth_middleware import get_current_user
-from wakedock.models.auth import User
+from wakedock.database.models import User
 
 import logging
 logger = logging.getLogger(__name__)

@@ -7,7 +7,8 @@ from .base import Base, BaseModel, AuditableModel, TimestampMixin, UUIDMixin, So
 # Import all models
 from .alerts_models import Alert, AlertRule
 from .analytics_models import Metric, MetricData  
-from .authentication_models import User, Role
+# Temporarily disabled - use database.models.User instead
+# from .authentication_models import User, Role
 from .containers_models import Container, ContainerStack
 from .dashboard_models import Dashboard, Widget
 
@@ -26,8 +27,7 @@ __all__ = [
     "AlertRule",
     "Metric",
     "MetricData",
-    "User",
-    "Role", 
+    # "User", "Role" - use database.models.User instead
     "Container",
     "ContainerStack",
     "Dashboard",

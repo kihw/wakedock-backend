@@ -10,7 +10,7 @@ from wakedock.controllers.base_controller import BaseController
 from wakedock.repositories.auth_repository import AuthRepository
 from wakedock.validators.auth_validator import AuthValidator
 from wakedock.services.auth_service import AuthService
-from wakedock.models.auth import User
+from wakedock.database.models import User
 from wakedock.core.logging import get_logger
 from wakedock.core.exceptions import WakeDockException
 

@@ -16,7 +16,7 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from wakedock.logging import get_logger
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 logger = get_logger(__name__)
 

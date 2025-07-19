@@ -13,7 +13,7 @@ from wakedock.serializers.containers_serializers import (
 )
 from wakedock.core.database import get_db
 from wakedock.core.auth import get_current_user
-from wakedock.models.authentication_models import User
+from wakedock.database.models import User
 
 router = APIRouter(prefix="/containers", tags=["containers"])
 

@@ -26,7 +26,7 @@ from wakedock.serializers.auth_serializers import (
     BulkUserActionSerializer
 )
 from wakedock.core.database import get_db_session
-from wakedock.models.auth import User
+from wakedock.database.models import User
 
 import logging
 logger = logging.getLogger(__name__)

@@ -10,7 +10,8 @@ oauth2_scheme = HTTPBearer()
 
 from wakedock.core.alerts_service import AlertsService
 from wakedock.core.auth_service import AuthService, get_auth_service
-from wakedock.core.auto_deployment_service import AutoDeploymentService
+# Temporarily disabled - causes import chain issues
+# from wakedock.core.auto_deployment_service import AutoDeploymentService
 from wakedock.core.cicd_service import CICDService, get_cicd_service
 from wakedock.core.docker_manager import DockerManager
 from wakedock.core.docker_client import docker_client
@@ -39,7 +40,8 @@ _user_profile_service: UserProfileService = None
 _rbac_service: RBACService = None
 _security_audit_service: SecurityAuditService = None
 _cicd_service: CICDService = None
-_auto_deployment_service: AutoDeploymentService = None
+# _auto_deployment_service: AutoDeploymentService = None
+_auto_deployment_service = None
 _swarm_service: SwarmService = None
 _environment_service: EnvironmentService = None
 
@@ -159,16 +161,18 @@ def get_auto_deployment_service(
     db: Session = Depends(get_db_session),
     security_service: SecurityAuditService = Depends(get_security_audit_service_dependency),
     rbac_service: RBACService = Depends(get_rbac_service_dependency)
-) -> AutoDeploymentService:
+):  # -> AutoDeploymentService:
     """
     Factory function pour créer le service de déploiement automatique
     Utilisé comme dependency FastAPI avec injection des dépendances
     """
-    return AutoDeploymentService(
-        db_session=db,
-        security_service=security_service,
-        rbac_service=rbac_service
-    )
+    # Temporarily return None - AutoDeploymentService disabled
+    return None
+    # return AutoDeploymentService(
+    #     db_session=db,
+    #     security_service=security_service,
+    #     rbac_service=rbac_service
+    # )
 
 def get_swarm_service(
     db: Session = Depends(get_db_session),

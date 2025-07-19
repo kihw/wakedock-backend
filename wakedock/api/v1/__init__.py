@@ -7,7 +7,7 @@ and container orchestration features introduced in version 1.0.0.
 
 from fastapi import APIRouter, Depends
 from wakedock.core.security import get_current_user
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 # Import v1.0.0 API modules
 from wakedock.api.v1.services import router as services_router

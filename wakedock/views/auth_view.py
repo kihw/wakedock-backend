@@ -6,7 +6,7 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 
 from wakedock.views.base_view import BaseView
-from wakedock.models.auth import User, Role, Permission, UserSession
+from wakedock.database.models import User, Role, Permission, UserSession
 from wakedock.core.logging import get_logger
 
 logger = get_logger(__name__)

@@ -16,7 +16,7 @@ from wakedock.core.auth_middleware import (
     require_user_management,
 )
 from wakedock.core.rbac_service import get_rbac_service
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 logger = logging.getLogger(__name__)
 

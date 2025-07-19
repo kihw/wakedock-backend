@@ -16,7 +16,7 @@ from wakedock.core.security_audit_service import (
     SecurityEventData,
     SecurityEventType,
 )
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 router = APIRouter(prefix="/security-audit", tags=["security-audit"])
 

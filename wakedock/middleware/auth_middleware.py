@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from wakedock.core.database import get_db_session
 from wakedock.repositories.auth_repository import AuthRepository
-from wakedock.models.auth import User, UserSession
+from wakedock.database.models import User, UserSession
 
 import logging
 logger = logging.getLogger(__name__)

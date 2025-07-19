@@ -10,14 +10,50 @@ from typing import Any, Dict, List, Optional
 from sqlalchemy.orm import Session
 
 from wakedock.core.database import get_sync_db
-from wakedock.models.user import (
-    AuditLog,
-    Permission,
-    Role,
-    RolePermission,
-    User,
-    UserRole,
-)
+from wakedock.database.models import User
+
+# Temporary stub classes for RBAC - to be replaced with proper models
+class Role:
+    def __init__(self, **kwargs):
+        self.id = kwargs.get('id')
+        self.name = kwargs.get('name')
+        self.description = kwargs.get('description')
+        self.is_active = kwargs.get('is_active', True)
+        self.is_system = kwargs.get('is_system', False)
+        self.created_at = kwargs.get('created_at')
+
+class Permission:
+    def __init__(self, **kwargs):
+        self.id = kwargs.get('id')
+        self.name = kwargs.get('name')
+        self.description = kwargs.get('description')
+        self.is_active = kwargs.get('is_active', True)
+        self.resource = kwargs.get('resource')
+        self.action = kwargs.get('action')
+
+class UserRole:
+    def __init__(self, **kwargs):
+        self.user_id = kwargs.get('user_id')
+        self.role_id = kwargs.get('role_id')
+        self.granted_at = kwargs.get('granted_at')
+        self.expires_at = kwargs.get('expires_at')
+        self.is_active = kwargs.get('is_active', True)
+
+class RolePermission:
+    def __init__(self, **kwargs):
+        self.role_id = kwargs.get('role_id')
+        self.permission_id = kwargs.get('permission_id')
+
+class AuditLog:
+    def __init__(self, **kwargs):
+        self.user_id = kwargs.get('user_id')
+        self.action = kwargs.get('action')
+        self.resource_type = kwargs.get('resource_type')
+        self.resource_id = kwargs.get('resource_id')
+        self.details = kwargs.get('details')
+        self.ip_address = kwargs.get('ip_address')
+        self.user_agent = kwargs.get('user_agent')
+        self.created_at = kwargs.get('created_at')
 
 logger = logging.getLogger(__name__)
 

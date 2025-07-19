@@ -55,7 +55,8 @@ class Environment(Base):
     created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     
     # Relations
-    creator = relationship("User", back_populates="environments")
+    # Temporarily disabled to fix SQLAlchemy registry conflicts
+    # creator = relationship("User", back_populates="environments")
     variables = relationship("EnvironmentVariable", back_populates="environment", cascade="all, delete-orphan")
     configs = relationship("EnvironmentConfig", back_populates="environment", cascade="all, delete-orphan")
     health_records = relationship("EnvironmentHealth", back_populates="environment", cascade="all, delete-orphan")

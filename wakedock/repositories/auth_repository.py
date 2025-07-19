@@ -10,7 +10,7 @@ from sqlalchemy import select, and_, or_
 from sqlalchemy.orm import selectinload
 
 from wakedock.repositories.base_repository import BaseRepository
-from wakedock.models.auth import User, Role, Permission, UserSession
+from wakedock.database.models import User, Role, Permission, UserSession
 from wakedock.core.logging import get_logger
 from wakedock.core.exceptions import WakeDockException
 

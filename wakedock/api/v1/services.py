@@ -23,7 +23,7 @@ from pathlib import Path
 from wakedock.core.database import get_database
 from wakedock.core.security import get_current_user
 from wakedock.core.docker_manager import DockerManager
-from wakedock.models.user import User
+from wakedock.database.models import User
 
 # Initialize router
 router = APIRouter(prefix="/api/v1/services", tags=["services"])

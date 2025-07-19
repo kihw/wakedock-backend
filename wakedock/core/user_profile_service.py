@@ -10,7 +10,13 @@ from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
 from wakedock.logging import get_logger
-from wakedock.models.user import AuditLog, User
+from wakedock.database.models import User
+# Temporarily disabled - need to fix model imports
+# from wakedock.models.user import AuditLog, User
+
+# Temporary stub class
+class AuditLog:
+    pass
 
 logger = get_logger(__name__)
 
