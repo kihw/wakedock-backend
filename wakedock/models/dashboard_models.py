@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from datetime import datetime
 
-from wakedock.core.database import Base
+from wakedock.database.base import Base
 
 
 class Dashboard(Base):
@@ -252,7 +252,7 @@ class DashboardAlert(Base):
     # Relationships
     dashboard = relationship("Dashboard")
     widget = relationship("Widget")
-    notifications = relationship("AlertNotification", back_populates="alert", cascade="all, delete-orphan")
+    # notifications = relationship("AlertNotification", back_populates="alert", cascade="all, delete-orphan")  # Moved to alerts_models.py
     
     # Indexes
     __table_args__ = (
@@ -264,30 +264,7 @@ class DashboardAlert(Base):
     )
 
 
-class AlertNotification(Base):
-    """Alert notification model"""
-    __tablename__ = "alert_notifications"
-    
-    id = Column(String(36), primary_key=True, index=True)
-    alert_id = Column(String(36), ForeignKey("dashboard_alerts.id"), nullable=False)
-    type = Column(String(20), nullable=False)
-    recipient = Column(String(255), nullable=False)
-    message = Column(Text)
-    status = Column(String(20), default="pending")
-    sent_at = Column(DateTime)
-    error_message = Column(Text)
-    created_at = Column(DateTime, default=func.now())
-    
-    # Relationships
-    alert = relationship("DashboardAlert", back_populates="notifications")
-    
-    # Indexes
-    __table_args__ = (
-        Index('idx_notification_alert_id', 'alert_id'),
-        Index('idx_notification_type', 'type'),
-        Index('idx_notification_status', 'status'),
-        Index('idx_notification_sent_at', 'sent_at'),
-    )
+# AlertNotification moved to alerts_models.py to avoid conflicts
 
 
 class DashboardMetric(Base):

@@ -9,7 +9,7 @@ from datetime import datetime
 from typing import Optional, Any, Dict
 import uuid
 
-Base = declarative_base()
+from wakedock.database.base import Base  # Use the single Base instance
 
 class BaseModel(Base):
     """Base model class with common fields and methods"""

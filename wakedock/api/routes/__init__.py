@@ -1,5 +1,5 @@
 # Routes package
-from .dashboard_api import router as dashboard_router
+# from .dashboard_api import router as dashboard_router  # Skip dashboard for now
 from . import alerts
 from . import analytics
 from . import centralized_logs
@@ -19,7 +19,7 @@ from . import system
 from . import user_preferences
 
 __all__ = [
-    'dashboard_router',
+    # 'dashboard_router',
     'alerts',
     'analytics',
     'centralized_logs',

@@ -9,9 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import declarative_base, Session, sessionmaker
 
 from ..config import get_settings
-
-# Create the declarative base for models
-Base = declarative_base()
+from .base import Base  # Use the single Base instance
 
 
 class DatabaseManager:

@@ -38,6 +38,11 @@ def wait_for_database(database_url: str, max_retries: int = 30):
 
 def create_admin_user():
     """Create default admin user if no users exist"""
+    # Skip admin user creation if using minimal app
+    if os.getenv('USE_AUTH_APP', 'false').lower() != 'true':
+        print("ℹ️  Skipping admin user creation (USE_AUTH_APP=false)")
+        return True
+    
     database_url = os.getenv('DATABASE_URL')
     if not database_url:
         print("❌ DATABASE_URL environment variable not set")
@@ -49,8 +54,13 @@ def create_admin_user():
         SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
         
         # Import after database is ready
-        from wakedock.database.models import User, UserRole
-        from wakedock.api.auth.password import hash_password
+        from wakedock.models.auth_models import User, UserRole
+        from wakedock.core.auth.jwt_service import JWTService
+        from wakedock.database.base import Base, init_models
+        
+        # Initialize models and create tables
+        init_models()
+        Base.metadata.create_all(bind=engine)
         
         db = SessionLocal()
         
@@ -74,7 +84,8 @@ def create_admin_user():
             else:
                 print(f"🔐 Using configured admin password")
             
-            hashed_password = hash_password(admin_password)
+            jwt_service = JWTService()
+            hashed_password = jwt_service.get_password_hash(admin_password)
             
             admin_user = User(
                 username='admin',

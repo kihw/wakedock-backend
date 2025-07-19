@@ -35,8 +35,8 @@ AsyncSessionLocal = async_sessionmaker(
     async_engine, class_=AsyncSession, expire_on_commit=False
 )
 
-# Create base class for models
-Base = declarative_base()
+# Import the single Base instance
+from wakedock.database.base import Base
 
 # Metadata for migrations
 metadata = MetaData()

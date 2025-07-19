@@ -8,9 +8,13 @@ from pathlib import Path
 
 import uvicorn
 
-# Temporarily use minimal app to bypass import issues
-# from wakedock.api.app import create_app
-from wakedock.api.app_minimal import create_minimal_app as create_app
+# Choose which app to use based on environment
+import os
+if os.getenv("USE_AUTH_APP", "false").lower() == "true":
+    from wakedock.api.app_auth import create_app
+else:
+    # Use minimal app for now to avoid import issues
+    from wakedock.api.app_minimal import create_minimal_app as create_app
 from wakedock.config import get_settings
 from wakedock.core.advanced_analytics import AdvancedAnalyticsService
 from wakedock.core.alerts_service import AlertsService
@@ -59,46 +63,55 @@ def create_application():
     analytics_service = None
     alerts_service = None
     log_optimization_service = None
-    if settings.monitoring.enabled:
-        try:
-            # Create metrics collector
-            metrics_collector = MetricsCollector()
-            
-            # Create analytics service
-            analytics_service = AdvancedAnalyticsService(
-                metrics_collector=metrics_collector,
-                storage_path=str(Path(settings.wakedock.data_path) / "analytics")
-            )
-            
-            # Create alerts service
-            alerts_service = AlertsService(
-                metrics_collector=metrics_collector,
-                storage_path=str(Path(settings.wakedock.data_path) / "alerts")
-            )
-            
-            # Create log optimization service
-            log_optimization_service = LogOptimizationService(
-                storage_path=str(Path(settings.wakedock.data_path) / "logs_optimization")
-            )
-            
-            logger.info("Advanced Analytics, Alerts, and Log Optimization services initialized")
-        except Exception as e:
-            logger.warning(f"Failed to initialize Analytics/Alerts/LogOptimization services: {e}")
-            analytics_service = None
-            alerts_service = None
+    # Temporarily disable advanced services to focus on basic monitoring
+    # if settings.monitoring.enabled:
+    #     try:
+    #         # Import docker manager
+    #         from wakedock.core.docker_manager import get_docker_manager
+    #         docker_manager = get_docker_manager()
+    #         
+    #         # Create metrics collector with docker manager
+    #         metrics_collector = MetricsCollector(docker_manager)
+    #         
+    #         # Create analytics service
+    #         analytics_service = AdvancedAnalyticsService(
+    #             metrics_collector=metrics_collector,
+    #             storage_path=str(Path(settings.wakedock.data_path) / "analytics")
+    #         )
+    #         
+    #         # Create alerts service
+    #         alerts_service = AlertsService(
+    #             metrics_collector=metrics_collector,
+    #             storage_path=str(Path(settings.wakedock.data_path) / "alerts")
+    #         )
+    #         
+    #         # Create log optimization service
+    #         log_optimization_service = LogOptimizationService(
+    #             storage_path=str(Path(settings.wakedock.data_path) / "logs_optimization")
+    #         )
+    #         
+    #         logger.info("Advanced Analytics, Alerts, and Log Optimization services initialized")
+    #     except Exception as e:
+    #         logger.warning(f"Failed to initialize Analytics/Alerts/LogOptimization services: {e}")
+    #         analytics_service = None
+    #         alerts_service = None
     
     # Connect monitoring service to orchestrator
     monitoring_service.set_orchestrator(orchestrator)
     
-    # Create FastAPI app - using minimal version temporarily
-    # app = create_app(orchestrator, monitoring_service, analytics_service, alerts_service)
-    app = create_app()
+    # Create FastAPI app with full functionality including monitoring
+    if os.getenv("USE_AUTH_APP", "false").lower() == "true":
+        app = create_app()  # auth app doesn't need parameters
+    else:
+        app = create_app()  # minimal app doesn't need parameters
     
     return app
 
 # Create the app instance for uvicorn
 try:
+    print("🔧 Attempting to create full application...")
     app = create_application()
+    print("✅ Full application created successfully")
 except Exception as e:
     # Fallback: create a minimal app for startup debugging
     from fastapi import FastAPI
@@ -109,6 +122,8 @@ except Exception as e:
         return {"status": "ok", "message": "Minimal app running"}
     
     print(f"⚠️ Failed to create full application, using minimal app: {e}")
+    import traceback
+    traceback.print_exc()
 
 
 async def main():
